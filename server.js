@@ -7,10 +7,14 @@ var app = express();
 var api = {};
 app.fs = require('fs');
 app.pg = require('pg');
+var cookieParser = require('cookie-parser');
+
 app.set('port', process.env.PORT||process.argv[2] || 3002);
+app.use(cookieParser('SECRET' ))
 
-
-
+//app.use(express.bodyParser());
+  //  app.use(express.session({ secret: 'SECRET' }));
+     
 var pg = require('pg');
 
 // create a config to configure both pooling behavior
@@ -19,7 +23,7 @@ var pg = require('pg');
 // will be read if the config is not present
 var config = {
   user: 'postgres', //env var: PGUSER
-  database: 'android', //env var: PGDATABASE
+  database: 'postgres', //env var: PGDATABASE
   host: 'localhost', // Server hosting the postgres database
   port: 5432, //env var: PGPORT
   max: 10, // max number of clients in the pool
@@ -62,7 +66,7 @@ app.queryDB = function(req,res,client,query,callback){
 	client.query(query,  function(err, result) {
 		//call `done(err)` to release the client back to the pool (or destroy it if there is an error)
 			
-			return callback(err,result.rows)
+			return callback(err,(result.rows||result))
 		//output: 1
 	})
 }
@@ -78,6 +82,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Отправка get-запроса /users получаем юзеров
 
 require('./routes/index.js')(app);
+//require('./routes/user.js')(app);
 //Запускаем сервер
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

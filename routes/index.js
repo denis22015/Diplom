@@ -26,7 +26,7 @@ module.exports = function(app){
 	app.get('/testPg/',function(req,res){
 		
 		app.connectDB(req,res,function(err,req,res,client){
-			var _query = "select 1"
+			var _query = "select  * FROM sessions"
 			app.queryDB(req,res,client,_query,function(err,result){
 				if(err)
 					res.status(500).send(err)
