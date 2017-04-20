@@ -81,4 +81,34 @@ $(document).ready(function(){
 		}
 	})
 	.addTo(map);
+
+
+
+
+	$.get('/get/coords',function(data){
+
+		if(data){
+			if(data[0]){
+				var pointList = []
+				//var pointA = new L.LatLng(data[0].lat, data[0].lng);
+				data.forEach (function(elem){
+					//var pointB = new L.LatLng(elem.lat, elem.lng);
+					//var pointList = [pointA, pointB];
+					pointList.push(new L.LatLng(elem.lat, elem.lng))
+
+				})
+				var firstpolyline = new L.Polyline(pointList, {
+				    color: 'red',
+				    weight: 3,
+				    opacity: 0.5,
+				    smoothFactor: 1
+				});
+				var lastPoint = data[data.length-1]
+				map.setView(L.latLng(lastPoint.lat,lastPoint.lng),16)
+
+				firstpolyline.addTo(map);
+
+			}
+		}
+	})
 })
