@@ -7,11 +7,8 @@ var app = express();
 var api = {};
 app.fs = require('fs');
 app.pg = require('pg');
-var cookieParser = require('cookie-parser');
 
 app.set('port', process.env.PORT||process.argv[2] || 3002);
-app.use(cookieParser('SECRET' ))
-
 //app.use(express.bodyParser());
   //  app.use(express.session({ secret: 'SECRET' }));
      
@@ -27,9 +24,8 @@ var config = {
   host: 'localhost', // Server hosting the postgres database
   port: 5432, //env var: PGPORT
   max: 10, // max number of clients in the pool
-  idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+  idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
 };
-
 
 //this initializes a connection pool
 //it will keep idle connections open for a 30 seconds
@@ -45,16 +41,18 @@ app.connectDB = function (req,res,callback){
 	  if(err) {
 		return console.error('error fetching client from pool', err);
 	  }
-	  
-	  
-	  
-		return callback (err,req,res,client)
-	  
-		
-		
-		
+	   
+	  callback (err,req,res,client)
+
+	  pool.end(function (err) {
+	      if (err) throw err;
+	  });
+	  	
 		
   });
+
+
+
 	pool.on('error', function (err, client) {
 	  console.error('idle client error', err.message, err.stack)
 	})
@@ -65,8 +63,9 @@ app.connectDB = function (req,res,callback){
 app.queryDB = function(req,res,client,query,callback){
 	client.query(query,  function(err, result) {
 		//call `done(err)` to release the client back to the pool (or destroy it if there is an error)
-			
-			return callback(err,(result.rows||result))
+			if(result)
+			return callback(err,result.rows)
+		else return callback(err,result)
 		//output: 1
 	})
 }
@@ -81,8 +80,8 @@ app.queryDB = function(req,res,client,query,callback){
 app.use(express.static(path.join(__dirname, 'public')));
 //Отправка get-запроса /users получаем юзеров
 
+require('./routes/user.js')(app);
 require('./routes/index.js')(app);
-//require('./routes/user.js')(app);
 //Запускаем сервер
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
