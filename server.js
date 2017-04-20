@@ -19,11 +19,12 @@ var pg = require('pg');
 // note: all config is optional and the environment variables
 // will be read if the config is not present
 var config = {
-  user: 'postgres', //env var: PGUSER
-  database: 'postgres', //env var: PGDATABASE
-  host: 'localhost', // Server hosting the postgres database
+  user: 'obtlvpxkuuaqhj', //env var: PGUSER
+  database: 'd4gasgig7dm50', //env var: PGDATABASE
+  host: 'ec2-54-247-92-185.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database
   port: 5432, //env var: PGPORT
-  max: 10, // max number of clients in the pool
+  max: 10,
+  password:"684bba071e07d973c543cef66833af97e5b6b427f63dee402283043e7bb82c74", // max number of clients in the pool
   idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
 };
 
