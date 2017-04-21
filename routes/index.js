@@ -86,11 +86,8 @@ module.exports = function(app){
 	})
 
 
-	app.get('/', function(req,res){			
-		console.log(req.isAuthenticated())
-		console.log(req.session)
-		console.log(req.user)
-		app.fs.readFile(app.dir+'//html//index.html', 'utf8', function(err, contents) {	
+	app.get('/', function(req,res){		
+		app.fs.readFile(app.dir+'//html//map.html', 'utf8', function(err, contents) {	
 			if(err)
 				res.status(500).send(err);
 			res.send(contents);
