@@ -85,7 +85,7 @@ $(document).ready(function(){
 
 
 
-	$.get('/get/coords',function(data){
+	$.get('/get/coords1',function(data){
 
 		if(data){
 			if(data[0]){
