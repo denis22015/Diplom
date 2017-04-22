@@ -45,7 +45,7 @@ module.exports = function(app){
 		app.connectDB(req,res,function(err,req,res,client){
         	var lat = req.params.lat;
         	var lng = req.params.lng;
-        	var lng = req.params.speed;
+        	var speed = req.params.speed;
 			console.log(`HERE '${lat}','${lng}'` )
         	var _q = `Insert into coords (lat,lng,speed) values ('${lat}','${lng}','${speed}')`
 			app.queryDB(req,res,client,_q,function(err,result){
