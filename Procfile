@@ -1,1 +1,2 @@
-web: pm2 start server.js
+web: node ./node_modules/.bin/pm2 start --attach server.js
+
