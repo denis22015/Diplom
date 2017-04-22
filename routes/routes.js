@@ -81,7 +81,8 @@ module.exports = function(app){
         	var _q = `select * from coords order by date desc`
 			console.log(_q)
 			app.queryDB(req,res,client,_q,function(err,result){
-
+				if(err)
+					res.status(500).send(err)
 				res.json(result)
 			})
 		})
