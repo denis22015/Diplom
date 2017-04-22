@@ -82,7 +82,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Отправка get-запроса /users получаем юзеров
 
 require('./routes/user.js')(app);
-require('./routes/index.js')(app);
+require('./routes/routes.js')(app);
 //Запускаем сервер
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -41,12 +41,13 @@ module.exports = function(app){
 		})
 	})
 	
-	app.get('/add/coords/:lat/:lng',function(req,res){
+	app.get('/add/coords/:lat/:lng/:speed',function(req,res){
 		app.connectDB(req,res,function(err,req,res,client){
         	var lat = req.params.lat;
         	var lng = req.params.lng;
+        	var lng = req.params.speed;
 			console.log(`HERE '${lat}','${lng}'` )
-        	var _q = `Insert into coords (lat,lng) values ('${lat}','${lng}')`
+        	var _q = `Insert into coords (lat,lng,speed) values ('${lat}','${lng}','${speed}')`
 			app.queryDB(req,res,client,_q,function(err,result){
 
 				res.send("OK")
@@ -78,6 +79,18 @@ module.exports = function(app){
 			console.log("HERE")
         	var _q = `select * from coords order by date desc`
 			console.log(_q)
+			app.queryDB(req,res,client,_q,function(err,result){
+
+				res.json(result)
+			})
+		})
+	})
+	app.get('/set/trash/*',function(req,res){
+		//res.json(req.session)
+		app.connectDB(req,res,function(err,req,res,client){
+			console.log("HERE")
+			var trash = req.params
+        	var _q = `insert into trash (trash) values (${trash}) `
 			app.queryDB(req,res,client,_q,function(err,result){
 
 				res.json(result)
