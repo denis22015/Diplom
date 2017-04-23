@@ -104,7 +104,7 @@ $(document).ready(function(){
 
 
 
-	$.get('/get/coords1',function(data){
+	$.get('/get/coords',function(data){
 		addToMap(data)
 		addToPanelMap(data) 
 

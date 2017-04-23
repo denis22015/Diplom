@@ -71,7 +71,7 @@ module.exports = function(app){
 		//res.json(req.session)
 		app.connectDB(req,res,function(err,req,res,client){
 			console.log("HERE")
-        	var _q = `select * from coords where session in ( ${user_id}) order by date desc`
+        	var _q = `select * from coords where order by date desc`
 			console.log(_q)
 			app.queryDB(req,res,client,_q,function(err,result){
 				if(err)
@@ -96,12 +96,13 @@ module.exports = function(app){
 		//res.json(req.session)
 		app.connectDB(req,res,function(err,req,res,client){
 			console.log("HERE")
-        	var _q = `select  id ,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, lat, lng, session, round(speed::numeric,3) as speed  from coords order by date `
+        	var _q = `select  id ,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
+        	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date `
 			console.log(_q)
 			app.queryDB(req,res,client,_q,function(err,result){
 				if(err)
 					res.status(500).send(err)
-				res.json(dividePoints(result))
+				res.send("ok")
 			})
 		})
 	})
