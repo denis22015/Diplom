@@ -46,6 +46,8 @@ var config = {
 // to run a query we can acquire a client from the pool,
 // run a query on the client, and then return the client to the pool
 
+
+
 app.connectDB = function (req,res,callback){	
 	
 	var pool = new pg.Pool(config);
@@ -54,9 +56,9 @@ app.connectDB = function (req,res,callback){
 		return console.error('error fetching client from pool', err);
 	  }
 	   
-	  callback (err,req,res,client)
+	   callback (err,req,res,client)
 
-	  pool.end(function (err) {
+	   pool.end(function (err) {
 	      if (err) throw err;
 	  });
 	  	
@@ -74,17 +76,48 @@ app.connectDB = function (req,res,callback){
 
 app.queryDB = function(req,res,client,query,callback){
 	client.query(query,  function(err, result) {
+
 		//call `done(err)` to release the client back to the pool (or destroy it if there is an error)
-			if(result)
-			return callback(err,result.rows)
-		else return callback(err,result)
+		if(result){
+			if(result.rows) {
+				return callback(err,result.rows)
+			} else {
+				return callback(err,result.rows)
+			}}
+		else return callback(err,"efew")
 		//output: 1
 	})
 }
 
+app.dbQuery = function (req,res,query,callback){
+	const pool = new pg.Pool(config)
+pool.connect(function(err, client, done) {
 
+	   client.query(query,  function(err, result) {
+		//call `done(err)` to release the client back to the pool (or destroy it if there is an error)
+		if(err )
+			return callback(err,"")
 
+		if(result){
+			if(result.rows) {
+				return callback(err,result.rows)
+			} else {
+				return callback(err,result.rows)
+			}
+		}
+		else return callback(err,"efew")
+		pool.end(function (err) {
+	    	if (err) throw err;
+		});
+			//output: 1
+		})
 
+	   
+	  	
+		
+  });
+
+}
 
 
  app.dir = __dirname;
