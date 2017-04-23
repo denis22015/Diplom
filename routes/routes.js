@@ -65,20 +65,21 @@ module.exports = function(app){
 
 	app.get('/get/coords/',function(req,res){
 
-		if(!req.session.passport.user)
-			res.send('User is undefined')
-		var user_id  =  req.session.passport.user.id
+		//if(!req.session.passport.user)
+		//	res.send('User is undefined')
+		//var user_id  =  req.session.passport.user.id
 		//res.json(req.session)
-		app.connectDB(req,res,function(err,req,res,client){
+		//app.connectDB(req,res,function(err,req,res,client){
 			console.log("HERE")
-        	var _q = `select * from coords where order by date desc`
+        	var _q = `select  id ,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
+        	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date`
 			console.log(_q)
-			app.queryDB(req,res,client,_q,function(err,result){
+			app.dbQuery(req,res,_q,function(err,result){
 				if(err)
 					res.status(500).send(err)
 				res.json(dividePoints(result))
 			})
-		})
+		//})
 	})
 
 
