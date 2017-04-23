@@ -29,7 +29,7 @@ var pg = require('pg');
 //   idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
 // };
 
-var config = {
+var config = { 
   user: 'obtlvpxkuuaqhj', //env var: PGUSER
   database: 'd4gasgig7dm50', //env var: PGDATABASE
   host: 'ec2-54-247-92-185.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database

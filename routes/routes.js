@@ -166,7 +166,7 @@ module.exports = function(app){
 						lastlon = elem.lng
 					}
 
-				})
+				}) 
 				if(pointList.length>0){		
 					allPoints.push(pointList);
 				}
