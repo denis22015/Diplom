@@ -56,9 +56,6 @@ module.exports = function(app){
 		// 			}
 		// 	res.end("OK")
 		// })
-
-		const lat = elem.lat
-		const lng = elem.lng
 		const id = elem.id
 		request("https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+  /*language=uk*/
 			"&key=AIzaSyBzMpfnfVh5RyH-tb-xw5w4YoqDFcViC08", function(err,data,body) {
