@@ -19,25 +19,24 @@ var pg = require('pg');
 // will be read if the config is not present
 
 
-var config = {
-  user: 'postgres', //env var: PGUSER
-  database: 'postgres', //env var: PGDATABASE
-  host: 'localhost', // Server hosting the postgres database
-  port: 5432, //env var: PGPORT
-  max: 10,
-  password:"1111", // max number of clients in the pool
-  idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
-};
-
 // var config = {
-//   user: 'obtlvpxkuuaqhj', //env var: PGUSER
-//   database: 'd4gasgig7dm50', //env var: PGDATABASE
-//   host: 'ec2-54-247-92-185.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database
+//   user: 'postgres', //env var: PGUSER
+//   database: 'postgres', //env var: PGDATABASE
+//   host: 'localhost', // Server hosting the postgres database
 //   port: 5432, //env var: PGPORT
 //   max: 10,
-//   password:"684bba071e07d973c543cef66833af97e5b6b427f63dee402283043e7bb82c74", // max number of clients in the pool
+//   password:"1111", // max number of clients in the pool
 //   idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
 // };
+ var config = {
+  user: 'uqlyikmvgiyznd', //env var: PGUSER
+  database: 'd3n948ttnop2ub', //env var: PGDATABASE
+  host: 'ec2-54-247-99-159.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database
+  port: 5432, //env var: PGPORT
+  max: 10,ssl: true,
+  password:"a1119617d3dc99ae7153fe49c08c8fae7a24d7f1d52eefbec0ab86328a544693", // max number of clients in the pool
+  idleTimeoutMillis: 300000, // how long a client is allowed to remain idle before being closed
+};
 
 //this initializes a connection pool
 //it will keep idle connections open for a 30 seconds
@@ -89,11 +88,15 @@ app.queryDB = function(req,res,client,query,callback){
 	})
 }
 
-app.dbQuery = function (req,res,query,callback){
+app.dbQuery = function (req,res,_query,callback){
 	const pool = new pg.Pool(config)
 pool.connect(function(err, client, done) {
-
-	   client.query(query,  function(err, result) {
+		if(err)
+		{
+			console.log(err)
+			return callback(err.toString(),null)
+		}
+	   client.query(_query,  function(err, result) {
 		//call `done(err)` to release the client back to the pool (or destroy it if there is an error)
 		if(err )
 			return callback(err,"")

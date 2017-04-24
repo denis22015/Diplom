@@ -1,5 +1,4 @@
 
-			filelds_list=[];
 
 $(document).ready(function(){
 	window.map = L.map('mapid',{
@@ -66,7 +65,7 @@ $(document).ready(function(){
 </ul>*/
 	L.control.custom({
 		position: 'topright',
-		content : ' <div  style="   max-height: 600px;    overflow: auto;"  class="panel-body" id="coords" ></div>',
+		content : ' <div  style="   max-height: 500px;    overflow: auto;"  class="panel-body" id="coords" ></div>',
 		classes : 'panel panel-default',
 		style   :
 		{
@@ -101,34 +100,61 @@ $(document).ready(function(){
 		}
 	})
 	.addTo(map);
+	getPoints()
+
+	function getPoints(){
+
+		$.get('/get/coords',function(data){
+			addToMap(data)
+			addToPanelMap(data) 
+
+			$(".point").on('click',function(e){
+				const lat = $(e.target).attr("lat")
+				const lng = $(e.target).attr("lng")
+				if(window.marker)
+				window.marker.removeFrom(map)
+				window.marker = L.marker([lat,lng]).addTo(map)
+				positionTo(lat,lng)
+			})
 
 
+			$(".enable_button").on('click',function(e){
+				const id = $(e.target).attr("point_id")
+				clearMap();
+				$("#coords").html('')
 
-	$.get('/get/coords',function(data){
-		addToMap(data)
-		addToPanelMap(data) 
+				$.get('/enable/point/'+id,function(data){
+					getPoints()
+				})
+			})
+			$(".route_colapse").on('click',function(e){
+				console.log($(e.target).attr("route"))
+				localStorage.setItem("route",$(e.target).attr("route"))
+			})
+			var local =localStorage.getItem("route"); 
 
-		$(".point").on('click',function(e){
-			const lat = $(e.target).attr("lat")
-			const lng = $(e.target).attr("lng")
-			if(window.marker)
-			window.marker.removeFrom(map)
-			window.marker = 
-		L.marker([lat,lng]).addTo(map)
-			positionTo(lat,lng)
+			$("#route_colapse"+local).click()
+				
 		})
-			
-	})
+	}
+	function start(){
+		console.log(localStorage.getItem("route"))
+	}
+	var lastPoint = [50.40851753069729, 30.569458007812504]
 	function addToMap(data){
 		var pointList ;
 		data.forEach (function(elem){	
 			pointList=[]
 			elem.forEach (function(e){	
-				L.circle([e.lat, e.lng], {color: e.color ,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
-					    .bindPopup(e.date+e.name)
-					    .addTo(map);
-				pointList.push(new L.LatLng(e.lat, e.lng))
-				map.setView(L.latLng(e.lat, e.lng),18)
+				if(e.enable){
+					L.circle([e.lat, e.lng], {color: e.color ,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
+						    .bindPopup(e.date+e.name)
+						    .addTo(map)
+
+					pointList.push(new L.LatLng(e.lat, e.lng))
+					//map.setView(L.latLng(e.lat, e.lng),18)
+					lastPoint = L.latLng(e.lat, e.lng);
+				}
 			})
 			new L.Polyline(pointList, {
 							    color: 'blue',
@@ -146,44 +172,50 @@ $(document).ready(function(){
 		data.forEach(function(elem){
 			count ++;
 				dist = 0;
-				$("#coords").append(' <div class="panel-group">\
-  <div class="panel panel-default">\
+				$("#coords").append('<div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
-        <a data-toggle="collapse" href="#collapse'+count+'" onclick="positionTo('+elem[0].lat+','+elem[0].lng+')">'+count+' route <span id="route'+count+'" > </span> m group</a>\
-      </h4>    </div>    <div id="collapse'+count+'" class="panel-collapse collapse">      <ul class="list-group" id="route_list'+count+'">\
-          </ul>    </div>  </div></div>')
+        <a data-toggle="collapse" data-parent="#coords" class="route_colapse" id="route_colapse'+count+'" route="'+count+'" href="#collapse'+count+'" >'
+               +count+' route <span id="route'+count+'"   class="route_colapse" id="route_colapse'+count+'" route="'+count+'" > </span> m </a>      </h4>    </div> <div id="collapse'+count+'"  class="panel-collapse collapse ">\
+      <div class="panel-body" style="padding: 0px;">  <ul class="list-group" id="route_list'+count+'">\
+		          </ul>  </div>\
+    </div>\
+  </div>')
 
-					//<li class="list-group-item list-group-item-success">'+count+' route <span id="route'+count+'" > </span> m</li>')
 
-
-				/*
-
-<div class="panel-group">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" href="#collapse1">'+count+' route <span id="route'+count+'" > </span> m group</a>
-      </h4>
-    </div>
-    <div id="collapse1" class="panel-collapse collapse">
-      <ul class="list-group" id="route_list'+count+'">
-
-          </ul>
-    </div>
-  </div>
-</div>
-				*/
 			elem.forEach(function(e){
 
-				dist +=  (+e.dist)||0
-				$("#route_list"+count).append(' <li class="list-group-item list-group-item-info point" \
-					 lat="'+e.lat+'" lng="'+e.lng+'">'+e.lat+','+e.lng+' '+(e.dist?e.dist:'')+'</li>')
+				dist += (+(e.enable?e.dist:'0'))||0
+				$("#route_list"+count).append(' <li class="list-group-item list-group-item-'+((e.enable)?'info':'default')+ ' " > '
+						+e.lat+','+e.lng+' '+(e.dist?e.dist:'') +'<div class="btn-group pull-right"> '
+
+						+((e.enable)?' <a class="btn btn-xs   	btn-default point"  lat="'+e.lat+'" lng="'+e.lng+'"><i class="fa fa-map-marker point" lat="'
+							+e.lat+'" lng="'+e.lng+'" aria-hidden="true"></i></a>':'')
+
+						+'<a class="btn btn-xs   	btn-default enable_button" point_id="'+e.id+'"  ><i  point_id="'+e.id+'"  class=" enable_button fa '+((e.enable)?'fa-minus':'fa-plus')+'" aria-hidden="true"></i></a>'
+						+ '</div></li>')
 			})
+			dist=dist.toFixed(2)
 			$("#route"+count).html(dist+'')
 		})
 
+
 	}
+	function clearMap() {
+	    for(i in map._layers) {
+	        if(map._layers[i]._path != undefined) {
+	            try {
+	                map.removeLayer(map._layers[i]);
+	            }
+	            catch(e) {
+	                console.log("problem with " + e + map._layers[i]);
+	            }
+	        }
+	    }
+	}
+	if (!map.restoreView()) {
+          map.setView(lastPoint, 16);
+    }
 })
 function positionTo (lat,lng){
 

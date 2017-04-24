@@ -25,7 +25,7 @@ module.exports = function(app){
 	
 	app.get('/test/',function(req,res){
 	
-			app.dbQuery(req,res,"select * from sessions",function(err,result){
+			app.dbQuery(req,res,"select 1",function(err,result){
 				if(err){
 					res.end(err)
 				}
@@ -64,19 +64,13 @@ module.exports = function(app){
 
 
 	app.get('/get/coords/',function(req,res){
-
-		//if(!req.session.passport.user)
-		//	res.send('User is undefined')
-		//var user_id  =  req.session.passport.user.id
-		//res.json(req.session)
-		//app.connectDB(req,res,function(err,req,res,client){
 			console.log("HERE")
-        	var _q = `select  id ,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
+        	var _q = `select  id  ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
         	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date`
 			console.log(_q)
 			app.dbQuery(req,res,_q,function(err,result){
 				if(err)
-					res.status(500).send(err)
+					res.status(500).end(err)
 				res.json(dividePoints(result))
 			})
 		//})
@@ -96,30 +90,57 @@ module.exports = function(app){
 	app.get('/get/coords1/',function(req,res){
 		//res.json(req.session)
 		app.connectDB(req,res,function(err,req,res,client){
-			console.log("HERE")
-        	var _q = `select  id ,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
+        	var _q = `select  id ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
         	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date `
-			console.log(_q)
 			app.queryDB(req,res,client,_q,function(err,result){
 				if(err)
-					res.status(500).send(err)
-				res.send("ok")
+					res.status(500).end(err)
+				res.send(dividePoints(result))
 			})
 		})
 	})
+	// app.get('/get/coords/',function(req,res){
+	// 	//res.json(req.session)
+	// 	app.connectDB(req,res,function(err,req,res,client){
+	// 		console.log("HERE")
+ //        	var _q = `select  id ,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
+ //        	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date `
+	// 		console.log(_q)
+	// 		app.queryDB(req,res,client,_q,function(err,result){
+	// 			if(err)
+	// 				res.status(500).send(err)
+	// 			res.send("ok")
+	// 		})
+	// 	})
+	// })
 	app.get('/set/trash/*',function(req,res){
 		//res.json(req.session)
 		app.connectDB(req,res,function(err,req,res,client){
-			console.log("HERE")
+			//console.log("HERE")
 			var trash = req.params
         	var _q = `insert into trash (trash) values (${trash}) `
 			app.queryDB(req,res,client,_q,function(err,result){
+				if(err)
+					res.status(500).end(err)
 
 				res.json(result)
 			})
 		})
 	})
 
+	app.get('/geocode', function(req,res){		
+
+		// $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBzMpfnfVh5RyH-tb-xw5w4YoqDFcViC08",function(data){
+		// 	res.json(data)
+		// })
+		const _q = `update coords set enable = not enable  where id =${point}`	
+		//console.log(_q)
+		app.dbQuery(req,res,_q,function(err,result){
+				if(err)
+					res.status(500).end(err)
+			res.end("ok")
+		})
+	});
 
 	app.get('/', function(req,res){		
 		app.fs.readFile(app.dir+'//html//map.html', 'utf8', function(err, contents) {	
@@ -130,7 +151,17 @@ module.exports = function(app){
 	});
 
 
-
+	app.get('/enable/point/:point',function(req,res){
+		//res.send(req.params.point)
+		const point = req.params.point
+		const _q = `update coords set enable = not enable  where id =${point}`	
+		//console.log(_q)
+		app.dbQuery(req,res,_q,function(err,result){
+			if(err)
+				res.end(err)
+			res.end("ok")
+		})
+	})
 
 	function dividePoints(data){
 	 	var allPoints = []
@@ -150,9 +181,11 @@ module.exports = function(app){
 							allPoints.push(pointList)
 							pointList =[];
 						}
-						pointList.push(elem);						
-						lastlan = elem.lat
-						lastlon = elem.lng
+						pointList.push(elem);	
+						if(elem.enable)	{			
+							lastlan = elem.lat
+							lastlon = elem.lng
+						}
 
 					}  else
 					if (elem.speed > null){
@@ -164,8 +197,10 @@ module.exports = function(app){
 						elem.radius=1.5
 
 						pointList.push(elem);
-						lastlan = elem.lat
-						lastlon = elem.lng
+						if(elem.enable)	{			
+							lastlan = elem.lat
+							lastlon = elem.lng
+						}
 					}
 
 				}) 
