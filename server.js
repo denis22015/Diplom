@@ -45,7 +45,9 @@ var pg = require('pg');
 // to run a query we can acquire a client from the pool,
 // run a query on the client, and then return the client to the pool
 
-
+process.on('UncaughtException', function(e){
+	   console.error(e);
+	   })
 
 app.connectDB = function (req,res,callback){	
 	
@@ -124,13 +126,13 @@ pool.connect(function(err, client, done) {
 
 
  app.dir = __dirname;
-//Отправка get-запроса получаем index.
+//ГЋГІГЇГ°Г ГўГЄГ  get-Г§Г ГЇГ°Г®Г±Г  ГЇГ®Г«ГіГ·Г ГҐГ¬ index.
 app.use(express.static(path.join(__dirname, 'public')));
-//Отправка get-запроса /users получаем юзеров
+//ГЋГІГЇГ°Г ГўГЄГ  get-Г§Г ГЇГ°Г®Г±Г  /users ГЇГ®Г«ГіГ·Г ГҐГ¬ ГѕГ§ГҐГ°Г®Гў
 
 require('./routes/user.js')(app);
 require('./routes/routes.js')(app);
-//Запускаем сервер
+//Г‡Г ГЇГіГ±ГЄГ ГҐГ¬ Г±ГҐГ°ГўГҐГ°
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
   console.log()
