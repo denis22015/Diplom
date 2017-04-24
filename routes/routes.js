@@ -152,6 +152,8 @@ module.exports = function(app){
 		app.dbQuery(req,res,_q,function(err,result){
 			if(err)
 				res.status(500).end(err.toString())
+			var count = 0;
+			var leng = result.length();
 			result.forEach(function(elem){
 					//res.json(result[0])
 				const lat = elem.lat
@@ -166,8 +168,9 @@ module.exports = function(app){
 					const _q = `update   coords set address='${result}' where id = ${id}`	
 					//console.log(_q)
 					app.dbQuery(req,res,_q,function(err,result){
-
+						if(count==leng)
 				 		res.end("OK")
+				 		count++
 					})
 				})	
 			})
