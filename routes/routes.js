@@ -1,6 +1,6 @@
 
 module.exports = function(app){
-	
+	var request = require(app.dir+"/node_modules/request")
 	
 	
 	function init_pages(){
@@ -50,14 +50,29 @@ module.exports = function(app){
     	var lat = req.params.lat;
     	var lng = req.params.lng;
     	var speed = req.params.speed;
-		console.log(`HERE '${lat}','${lng}'` )
-    	var _q = `Insert into coords (lat,lng,speed) values ('${lat}','${lng}','${speed}')`
-		app.dbQuery(req,res,_q,function(err,result){
-					if(err){
-						res.status(500).end(err.toString())
-					}
-			res.end("OK")
-		})
+		// app.dbQuery(req,res,_q,function(err,result){
+		// 			if(err){
+		// 				res.status(500).end(err.toString())
+		// 			}
+		// 	res.end("OK")
+		// })
+
+		const lat = elem.lat
+		const lng = elem.lng
+		const id = elem.id
+		request("https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+  /*language=uk*/
+			"&key=AIzaSyBzMpfnfVh5RyH-tb-xw5w4YoqDFcViC08", function(err,data,body) {
+			if(err)
+				res.status(500).end(err)
+			var address = (JSON.parse(body)).results[0].formatted_address
+
+    		var _q = `Insert into coords (lat,lng,speed,address) values ('${lat}','${lng}','${speed}','${address}')`
+			//console.log(_q)
+			app.dbQuery(req,res,_q,function(err,result){
+
+		 		res.end("OK")
+			})
+		})	
 	})
 
 	
@@ -66,13 +81,15 @@ module.exports = function(app){
 	app.get('/get/coords/',function(req,res){
 			console.log("HERE")
         	var _q = `select  id  ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
-        	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date`
+        	lat, lng, session,  address,round(speed::numeric,3) as speed  from coords order by date`
 			console.log(_q)
 			app.dbQuery(req,res,_q,function(err,result){
 				if(err)
 					res.status(500).end(err.toString())
 				res.json(dividePoints(result))
 			})
+
+
 		//})
 	})
 
@@ -91,7 +108,7 @@ module.exports = function(app){
 		//res.json(req.session)
 		app.connectDB(req,res,function(err,req,res,client){
         	var _q = `select  id ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
-        	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date `
+        	lat, lng, session, address,round(speed::numeric,3) as speed  from coords order by date `
 			app.queryDB(req,res,client,_q,function(err,result){
 				if(err)
 					res.status(500).end(err.toString() )
@@ -133,12 +150,32 @@ module.exports = function(app){
 		// $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBzMpfnfVh5RyH-tb-xw5w4YoqDFcViC08",function(data){
 		// 	res.json(data)
 		// })
-		const _q = `update coords set enable = not enable  where id =${point}`	
+		const _q = `select * from   coords`	
 		//console.log(_q)
 		app.dbQuery(req,res,_q,function(err,result){
-				if(err)
-					res.status(500).end(err)
-			res.end("ok")
+			if(err)
+				res.status(500).end(err.toString())
+			result.forEach(function(elem){
+					//res.json(result[0])
+				const lat = elem.lat
+				const lng = elem.lng
+				const id = elem.id
+				request("https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+  /*language=uk*/
+					"&key=AIzaSyBzMpfnfVh5RyH-tb-xw5w4YoqDFcViC08", function(err,data,body) {
+					if(err)
+						res.status(500).end(err)
+					var result = (JSON.parse(body)).results[0].formatted_address
+
+					const _q = `update   coords set address='${result}' where id = ${id}`	
+					//console.log(_q)
+					app.dbQuery(req,res,_q,function(err,result){
+
+				 		res.end("OK")
+					})
+				})	
+			})
+		
+
 		})
 	});
 

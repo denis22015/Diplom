@@ -6,12 +6,12 @@ var app = express();
 var api = {};
 app.fs = require('fs');
 app.pg = require('pg');
-
 app.set('port', process.env.PORT||process.argv[2] || 3002);
 //app.use(express.bodyParser());
   //  app.use(express.session({ secret: 'SECRET' }));
      
 var pg = require('pg');
+app.jquery = require('jquery');
 
 // create a config to configure both pooling behavior
 // and client options

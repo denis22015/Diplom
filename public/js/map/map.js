@@ -147,9 +147,9 @@ $(document).ready(function(){
 			pointList=[]
 			elem.forEach (function(e){	
 				if(e.enable){
-					L.circle([e.lat, e.lng], {color: e.color ,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
-						    .bindPopup(e.date+e.name)
-						    .addTo(map)
+					L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
+						    .bindPopup(e.date+"<br>"+e.address)
+						    .addTo(map).bringToFront()
 
 					pointList.push(new L.LatLng(e.lat, e.lng))
 					//map.setView(L.latLng(e.lat, e.lng),18)
@@ -187,7 +187,7 @@ $(document).ready(function(){
 
 				dist += (+(e.enable?e.dist:'0'))||0
 				$("#route_list"+count).append(' <li class="list-group-item list-group-item-'+((e.enable)?'info':'default')+ ' " > '
-						+e.lat+','+e.lng+' '+(e.dist?e.dist:'') +'<div class="btn-group pull-right"> '
+						+e.address+' <br>'+(e.dist?e.dist:'start') +'<div class="btn-group pull-right"> '
 
 						+((e.enable)?' <a class="btn btn-xs   	btn-default point"  lat="'+e.lat+'" lng="'+e.lng+'"><i class="fa fa-map-marker point" lat="'
 							+e.lat+'" lng="'+e.lng+'" aria-hidden="true"></i></a>':'')
