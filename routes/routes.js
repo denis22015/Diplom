@@ -172,7 +172,7 @@ module.exports = function(app){
 				var lastlan = 0,lastlon=0;
 
 				data.forEach (function(elem){				
-					if (elem.speed==0) {
+					if (elem.speed<=0.01) {
 						elem.color="#green"
 						elem.fill="#00FF1E"
 						elem.radius=2
