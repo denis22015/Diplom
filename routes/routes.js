@@ -54,7 +54,7 @@ module.exports = function(app){
     	var _q = `Insert into coords (lat,lng,speed) values ('${lat}','${lng}','${speed}')`
 		app.dbQuery(req,res,_q,function(err,result){
 					if(err){
-						res.status(500).end(err)
+						res.status(500).end(err.toString())
 					}
 			res.end("OK")
 		})
@@ -70,7 +70,7 @@ module.exports = function(app){
 			console.log(_q)
 			app.dbQuery(req,res,_q,function(err,result){
 				if(err)
-					res.status(500).end(err)
+					res.status(500).end(err.toString())
 				res.json(dividePoints(result))
 			})
 		//})
@@ -94,7 +94,7 @@ module.exports = function(app){
         	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date `
 			app.queryDB(req,res,client,_q,function(err,result){
 				if(err)
-					res.status(500).end(err)
+					res.status(500).end(err.toString() )
 				res.send(dividePoints(result))
 			})
 		})
