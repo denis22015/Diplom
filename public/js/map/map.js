@@ -128,7 +128,7 @@ $(document).ready(function(){
 					}
 
 				})
-			},2000)
+			},2500)
 			$(".point").on('click',function(e){
 				const lat = $(e.target).attr("lat")
 				const lng = $(e.target).attr("lng")
