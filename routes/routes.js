@@ -218,8 +218,9 @@ module.exports = function(app){
 		 	if(data && data[0]){
 				var pointList = []
 				var lastlan = 0,lastlon=0;
+				var last_speed = 0;
+				data.forEach (function(elem){	
 
-				data.forEach (function(elem){				
 					if (elem.time<0.01) {
 						elem.color="#green"
 						elem.fill="#00FF1E"
@@ -234,7 +235,9 @@ module.exports = function(app){
 						if(elem.enable)	{			
 							lastlan = elem.lat
 							lastlon = elem.lng
+							last_speed = elem.speed;
 						}
+
 
 					}  else
 					if (elem.time > null){
@@ -244,13 +247,16 @@ module.exports = function(app){
 						elem.fill="#f03"
 						elem.radius=1.5
 						elem.speed = (dist/(+elem.time)).toFixed(2);
-						elem.name = "<br> speed :"+elem.speed + "<br> time :"+elem.time  + "<br> dist :"+elem.dist 
+						elem.acc = ((elem.speed-last_speed)/+elem.time).toFixed(2);
+						elem.name = "<br> speed :"+elem.speed + "<br> time :"+elem.time  + "<br> dist :"+elem.dist + "<br> acc :"+elem.acc 
 						pointList.push(elem);
 						if(elem.enable)	{			
 							lastlan = elem.lat
 							lastlon = elem.lng
+							last_speed = elem.speed;
 						}
-					}
+
+					}				
 
 				}) 
 				if(pointList.length>0){		
