@@ -103,13 +103,32 @@ $(document).ready(function(){
 	})
 	.addTo(map);
 	getPoints()
-
+	
 	function getPoints(){
 
 		$.get('/get/coords',function(data){
 			addToMap(data)
 			addToPanelMap(data) 
 
+			interval = setInterval(function(){
+				$.get('/test/'+count_of_points,function(data){
+					if(!data){
+						//pointList.push(lastPoint)
+						$.get('get/coords/'+count_of_points,function(data){
+							
+							data.forEach (function(elem){
+								elem.forEach (function(e){
+									count_of_points++;
+									L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
+									    .bindPopup(e.date+"<br>"+e.address+e.name)
+									    .addTo(map).bringToFront()
+								})
+							})
+						})
+					}
+
+				})
+			},2000)
 			$(".point").on('click',function(e){
 				const lat = $(e.target).attr("lat")
 				const lng = $(e.target).attr("lng")
@@ -145,8 +164,8 @@ $(document).ready(function(){
 	var lastPoint = [50.40851753069729, 30.569458007812504]
 	function addToMap(data){
 		var pointList ;
-		data.forEach (function(elem){	
-			pointList=[]
+		data.forEach (function(elem){
+			pointList=[];	
 			elem.forEach (function(e){	
 				count_of_points++;
 				if(e.enable){

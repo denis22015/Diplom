@@ -22,13 +22,13 @@ module.exports = function(app){
 	
 	console.log('----------------------------')
 	
-	app.get('/test/',function(req,res){
-	
-			app.dbQuery(req,res,"select 1",function(err,result){
+	app.get('/test/:count',function(req,res){
+			const count  = req.params.count||0;
+			app.dbQuery(req,res,`select count(*)<= ${count} as test from coords`,function(err,result){
 				if(err){
-					res.end(err)
+					res.end(err.toString())
 				}
-            	res.json(result)
+            	res.json(result[0].test)
             })
 		
 	})
@@ -90,10 +90,10 @@ module.exports = function(app){
 
 
 
-	app.get('/get/coords/',function(req,res){
+	app.get('/get/coords/:count',function(req,res){
 			console.log("HERE")
         	var _q = `select  id  ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
-        	lat, lng, session,  address,round(time::numeric,3) as time  from coords order by date`
+        	lat, lng, session,  address,round(time::numeric,3) as time  from coords order by date offset ${req.params.count}`
 			console.log(_q)
 			app.dbQuery(req,res,_q,function(err,result){
 				if(err)
