@@ -102,15 +102,10 @@ $(document).ready(function(){
 		}
 	})
 	.addTo(map);
-	getPoints()
-	
-	function getPoints(){
-
-		$.get('/get/coords',function(data){
-			addToMap(data)
-			addToPanelMap(data) 
-
-			interval = setInterval(function(){
+	init()
+	function init (){
+		getPoints()
+		interval = setInterval(function(){
 				$.get('/test/'+count_of_points,function(data){
 					if(!data){
 						//pointList.push(lastPoint)
@@ -128,7 +123,15 @@ $(document).ready(function(){
 					}
 
 				})
-			},2500)
+			},2000)
+	}
+	function getPoints(){
+		count_of_points = 0;
+		$.get('/get/coords',function(data){
+			addToMap(data)
+			addToPanelMap(data) 
+
+			
 			$(".point").on('click',function(e){
 				const lat = $(e.target).attr("lat")
 				const lng = $(e.target).attr("lng")
