@@ -107,19 +107,23 @@ $(document).ready(function(){
 		getPoints()
 		interval = setInterval(function(){
 				$.get('/test/'+count_of_points,function(data){
-					if(!data){
-						//pointList.push(lastPoint)
-						$.get('get/coords/'+count_of_points,function(data){
-							
-							data.forEach (function(elem){
-								elem.forEach (function(e){
-									count_of_points++;
-									L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
-									    .bindPopup(e.date+"<br>"+e.address+e.name)
-									    .addTo(map).bringToFront()
+					if(count_of_points==0){
+						getPoints()
+					} else {
+						if(!data){
+							//pointList.push(lastPoint)
+							$.get('get/coords/'+count_of_points,function(data){
+
+								data.forEach (function(elem){
+									elem.forEach (function(e){
+										count_of_points++;
+										L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
+										    .bindPopup(e.date+"<br>"+e.address+e.name)
+										    .addTo(map).bringToFront()
+									})
 								})
 							})
-						})
+						}
 					}
 
 				})
