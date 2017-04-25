@@ -220,7 +220,7 @@ module.exports = function(app){
 				var lastlan = 0,lastlon=0;
 				var last_speed = 0;
 				data.forEach (function(elem){	
-
+					if(elem.time>1000000)
 					if (elem.time<0.01) {
 						elem.color="#green"
 						elem.fill="#00FF1E"
