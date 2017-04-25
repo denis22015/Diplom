@@ -221,6 +221,7 @@ module.exports = function(app){
 				var last_speed = 0;
 				data.forEach (function(elem){	
 					if(elem.time>1000000)
+						elem.time=0
 					if (elem.time<0.01) {
 						elem.color="#green"
 						elem.fill="#00FF1E"
