@@ -37,6 +37,19 @@ var config = {
 //   password:"a1119617d3dc99ae7153fe49c08c8fae7a24d7f1d52eefbec0ab86328a544693", // max number of clients in the pool
 //   idleTimeoutMillis: 300000, // how long a client is allowed to remain idle before being closed
 // };
+<<<<<<< HEAD
+=======
+ var config = {
+  user: 'uqlyikmvgiyznd', //env var: PGUSER
+  database: 'd3n948ttnop2ub', //env var: PGDATABASE
+  host: 'ec2-54-247-99-159.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database
+  port: 5432, //env var: PGPORT
+//  max: 3,
+ssl: true,
+  password:"a1119617d3dc99ae7153fe49c08c8fae7a24d7f1d52eefbec0ab86328a544693", // max number of clients in the pool
+  idleTimeoutMillis: 1000, // how long a client is allowed to remain idle before being closed
+};
+>>>>>>> 38c82e0355b00807c8859c020d2027d1c360862c
 
 //this initializes a connection pool
 //it will keep idle connections open for a 30 seconds
@@ -102,7 +115,9 @@ pool.connect(function(err, client, done) {
 		//call `done(err)` to release the client back to the pool (or destroy it if there is an error)
 		if(err )
 			return callback(err,"")
-
+		pool.end(function (err) {
+	    		if (err) throw err;
+		});
 		if(result){
 			if(result.rows) {
 				return callback(err,result.rows)
@@ -111,9 +126,7 @@ pool.connect(function(err, client, done) {
 			}
 		}
 		else return callback(err,"efew")
-		pool.end(function (err) {
-	    	if (err) throw err;
-		});
+		
 			//output: 1
 		})
 

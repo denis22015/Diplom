@@ -115,6 +115,7 @@ $(document).ready(function(){
 		getPoints()
 		interval = setInterval(function(){
 				$.get('/test/'+count_of_points,function(data){
+<<<<<<< HEAD
 					if(!data||count_of_points==0){
 						//pointList.push(lastPoint)
 						$.get('get/coords/'+count_of_points,function(data){
@@ -125,9 +126,25 @@ $(document).ready(function(){
 									L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
 									    .bindPopup(e.date+"<br>"+e.address+e.name)
 									    .addTo(map).bringToFront()
+=======
+					if(count_of_points==0){
+						getPoints()
+					} else {
+						if(!data){
+							//pointList.push(lastPoint)
+							$.get('get/coords/'+count_of_points,function(data){
+
+								data.forEach (function(elem){
+									elem.forEach (function(e){
+										count_of_points++;
+										L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
+										    .bindPopup(e.date+"<br>"+e.address+e.name)
+										    .addTo(map).bringToFront()
+									})
+>>>>>>> 38c82e0355b00807c8859c020d2027d1c360862c
 								})
 							})
-						})
+						}
 					}
 
 				})
