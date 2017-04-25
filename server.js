@@ -102,7 +102,9 @@ pool.connect(function(err, client, done) {
 		//call `done(err)` to release the client back to the pool (or destroy it if there is an error)
 		if(err )
 			return callback(err,"")
-
+		pool.end(function (err) {
+	    		if (err) throw err;
+		});
 		if(result){
 			if(result.rows) {
 				return callback(err,result.rows)
@@ -111,9 +113,7 @@ pool.connect(function(err, client, done) {
 			}
 		}
 		else return callback(err,"efew")
-		pool.end(function (err) {
-	    	if (err) throw err;
-		});
+		
 			//output: 1
 		})
 
