@@ -46,10 +46,10 @@ module.exports = function(app){
 		})
 	})
 	
-	app.get('/add/coords/:lat/:lng/:speed',function(req,res){
+	app.get('/add/coords/:lat/:lng/:time',function(req,res){
     	var lat = req.params.lat;
     	var lng = req.params.lng;
-    	var speed = req.params.speed;
+    	var time = req.params.time;
 		// app.dbQuery(req,res,_q,function(err,result){
 		// 			if(err){
 		// 				res.status(500).end(err.toString())
@@ -62,7 +62,7 @@ module.exports = function(app){
 				res.status(500).end(err)
 			var address = (JSON.parse(body)).results[0].formatted_address
 
-    		var _q = `Insert into coords (lat,lng,speed,address) values ('${lat}','${lng}','${speed}','${address}')`
+    		var _q = `Insert into coords (lat,lng,time,address) values ('${lat}','${lng}','${time}','${address}')`
 			//console.log(_q)
 			app.dbQuery(req,res,_q,function(err,result){
 
@@ -77,7 +77,7 @@ module.exports = function(app){
 	app.get('/get/coords/',function(req,res){
 			console.log("HERE")
         	var _q = `select  id  ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
-        	lat, lng, session,  address,round(speed::numeric,3) as speed  from coords order by date`
+        	lat, lng, session,  address,round(time::numeric,3) as time  from coords order by date`
 			console.log(_q)
 			app.dbQuery(req,res,_q,function(err,result){
 				if(err)
@@ -104,7 +104,7 @@ module.exports = function(app){
 		//res.json(req.session)
 		app.connectDB(req,res,function(err,req,res,client){
         	var _q = `select  id ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
-        	lat, lng, session, address,round(speed::numeric,3) as speed  from coords order by date `
+        	lat, lng, session, address,round(time::numeric,3) as time  from coords order by date `
 			app.queryDB(req,res,client,_q,function(err,result){
 				if(err)
 					res.status(500).end(err.toString() )
@@ -204,11 +204,12 @@ module.exports = function(app){
 				var lastlan = 0,lastlon=0;
 
 				data.forEach (function(elem){				
-					if (elem.speed<=0.01) {
+					if (elem.time<0.01) {
 						elem.color="#green"
 						elem.fill="#00FF1E"
 						elem.radius=2
 						elem.name = "<br> start way"
+						elem.speed = 0;
 						if( pointList.length>0){
 							allPoints.push(pointList)
 							pointList =[];
@@ -220,14 +221,14 @@ module.exports = function(app){
 						}
 
 					}  else
-					if (elem.speed > null){
+					if (elem.time > null){
 						var dist = distance(lastlan,lastlon,elem.lat,elem.lng)	
 						elem.color="red"
 						elem.dist = dist.toFixed(2)
-						elem.name = "<br> speed :"+elem.speed
 						elem.fill="#f03"
 						elem.radius=1.5
-
+						elem.speed = (dist/(+elem.time)).toFixed(2);
+						elem.name = "<br> speed :"+elem.speed + "<br> time :"+elem.time  + "<br> dist :"+elem.dist 
 						pointList.push(elem);
 						if(elem.enable)	{			
 							lastlan = elem.lat

@@ -19,24 +19,24 @@ app.jquery = require('jquery');
 // will be read if the config is not present
 
 
-// var config = {
-//   user: 'postgres', //env var: PGUSER
-//   database: 'postgres', //env var: PGDATABASE
-//   host: 'localhost', // Server hosting the postgres database
-//   port: 5432, //env var: PGPORT
-//   max: 10,
-//   password:"1111", // max number of clients in the pool
-//   idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
-// };
- var config = {
-  user: 'uqlyikmvgiyznd', //env var: PGUSER
-  database: 'd3n948ttnop2ub', //env var: PGDATABASE
-  host: 'ec2-54-247-99-159.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database
+var config = {
+  user: 'postgres', //env var: PGUSER
+  database: 'postgres', //env var: PGDATABASE
+  host: 'localhost', // Server hosting the postgres database
   port: 5432, //env var: PGPORT
-  max: 10,ssl: true,
-  password:"a1119617d3dc99ae7153fe49c08c8fae7a24d7f1d52eefbec0ab86328a544693", // max number of clients in the pool
-  idleTimeoutMillis: 300000, // how long a client is allowed to remain idle before being closed
+  max: 10,
+  password:"1111", // max number of clients in the pool
+  idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
 };
+//  var config = {
+//   user: 'uqlyikmvgiyznd', //env var: PGUSER
+//   database: 'd3n948ttnop2ub', //env var: PGDATABASE
+//   host: 'ec2-54-247-99-159.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database
+//   port: 5432, //env var: PGPORT
+//   max: 10,ssl: true,
+//   password:"a1119617d3dc99ae7153fe49c08c8fae7a24d7f1d52eefbec0ab86328a544693", // max number of clients in the pool
+//   idleTimeoutMillis: 300000, // how long a client is allowed to remain idle before being closed
+// };
 
 //this initializes a connection pool
 //it will keep idle connections open for a 30 seconds

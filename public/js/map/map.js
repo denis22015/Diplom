@@ -148,7 +148,7 @@ $(document).ready(function(){
 			elem.forEach (function(e){	
 				if(e.enable){
 					L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
-						    .bindPopup(e.date+"<br>"+e.address)
+						    .bindPopup(e.date+"<br>"+e.address+e.name)
 						    .addTo(map).bringToFront()
 
 					pointList.push(new L.LatLng(e.lat, e.lng))
