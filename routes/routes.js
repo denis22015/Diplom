@@ -28,7 +28,10 @@ module.exports = function(app){
 				if(err){
 					res.end(err.toString())
 				}
-            	res.json(result[0].test)
+				if(result)
+            		res.json(result[0].test)
+            	else
+            		res.end("15")
             })
 		
 	})

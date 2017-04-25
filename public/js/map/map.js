@@ -1,8 +1,13 @@
 
 
 $(document).ready(function(){
-
+	point_rectangle = false;
+	$("#point_rectangle").on("click",funcion(){
+		point_rectangle = !point_rectangle;
+	})
 	var count_of_points = 0;
+	var first_rect_point;
+	var second_rect_point;
 	window.map = L.map('mapid',{
 		contextmenu: true,
 		contextmenuWidth: 140,
@@ -61,6 +66,7 @@ $(document).ready(function(){
 		window.open ("http://maps.google.com/maps?q=&layer=c&cbll="+e.latlng.lat+","+e.latlng.lng+"&cbp=",'_blank')
 				map.panTo(e.latlng);
 	}
+
 	/*<ul class="list-group">
   <li class="list-group-item list-group-item-success">First item</li>
   <li class="list-group-item list-group-item-info">Second item</li>
@@ -81,12 +87,14 @@ $(document).ready(function(){
 			'foo': 'bar',
 		},
 		events:
-		{/*
+		{
 			
 			click: function(data)
 			{
-				console.log('wrapper div element clicked');
-				console.log(data);	
+				if(first_rect_point)
+				{
+
+				}
 			},
 			dblclick: function(data)
 			{
@@ -107,7 +115,7 @@ $(document).ready(function(){
 		getPoints()
 		interval = setInterval(function(){
 				$.get('/test/'+count_of_points,function(data){
-					if(!data){
+					if(!data||count_of_points==0){
 						//pointList.push(lastPoint)
 						$.get('get/coords/'+count_of_points,function(data){
 							
@@ -125,6 +133,7 @@ $(document).ready(function(){
 				})
 			},2000)
 	}
+
 	function getPoints(){
 		count_of_points = 0;
 		$.get('/get/coords',function(data){
