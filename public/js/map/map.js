@@ -1,6 +1,8 @@
 
 
 $(document).ready(function(){
+
+	var count_of_points = 0;
 	window.map = L.map('mapid',{
 		contextmenu: true,
 		contextmenuWidth: 140,
@@ -146,6 +148,7 @@ $(document).ready(function(){
 		data.forEach (function(elem){	
 			pointList=[]
 			elem.forEach (function(e){	
+				count_of_points++;
 				if(e.enable){
 					L.circle([e.lat, e.lng], {color: e.color ,zIndexOffset:3,fillColor: e.fill,fillOpacity: 0.5,radius: e.radius}) 
 						    .bindPopup(e.date+"<br>"+e.address+e.name)

@@ -2,7 +2,6 @@
 module.exports = function(app){
 	var request = require(app.dir+"/node_modules/request")
 	
-	
 	function init_pages(){
 		app.fs.readdir('html', (err, files) => {
 			files.forEach(file => {
@@ -72,6 +71,23 @@ module.exports = function(app){
 	})
 
 	
+
+
+	app.get('/get/coords/',function(req,res){
+			console.log("HERE")
+        	var _q = `select  id  ,enable,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
+        	lat, lng, session,  address,round(time::numeric,3) as time  from coords order by date`
+			console.log(_q)
+			app.dbQuery(req,res,_q,function(err,result){
+				if(err)
+					res.status(500).end(err.toString())
+				res.json(dividePoints(result))
+			})
+
+
+		//})
+	})
+
 
 
 	app.get('/get/coords/',function(req,res){
