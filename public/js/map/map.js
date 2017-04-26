@@ -130,6 +130,7 @@ $(document).ready(function() {
 
     function getPoints() {
         $("#coords").html('')
+        $("#bounds_list").html('')
         getBounds()
 
 
@@ -353,11 +354,11 @@ $(document).ready(function() {
                 const bound_id = $(e.target).attr("bound_id")
                 console.log(bound_id)
                 $.get('/rem/bounds/' + bound_id, function(data) {
-                    
-                clearMap();
+
+                    clearMap();
                     getPoints();
 
-                        })
+                })
             })
         })
     }
