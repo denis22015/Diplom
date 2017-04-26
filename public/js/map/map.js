@@ -309,6 +309,7 @@ $(document).ready(function() {
         $.get("/get/bounds", function(data) {
             console.log(data[0])
             if (data[0])
+                if("#bounds").html('')
                 $("#bounds_list").append('<div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
