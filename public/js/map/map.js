@@ -126,30 +126,6 @@ $(document).ready(function() {
                 })
 
             }, 2000)
-    }
-
-    function getPoints() {
-        $("#coords").html('')
-        $("#bounds_list1").html('')
-
-
-        count_of_points = 0;
-        $.get('/get/coords', function(data) {
-
-            getBounds()
-            addToMap(data)
-            addToPanelMap(data)
-
-
-            
-
-        }).done(function(){
-            
-            $("#route_colapse" + local).click()
-        }
-            )
-    }
-
             $(".point").on('click', function(e) {
                 const lat = $(e.target).attr("lat")
                 const lng = $(e.target).attr("lng")
@@ -172,6 +148,30 @@ $(document).ready(function() {
                 console.log($(e.target).attr("route"))
                 localStorage.setItem("route", $(e.target).attr("route"))
             })
+    }
+
+    function getPoints() {
+        $("#coords").html('')
+        $("#bounds_list1").html('')
+
+
+        count_of_points = 0;
+        $.get('/get/coords', function(data) {
+
+            getBounds()
+            addToMap(data)
+            addToPanelMap(data)
+
+
+            
+
+        }).done(function(){
+
+            $("#route_colapse" + local).click()
+        })
+    }
+
+            
             var local = localStorage.getItem("route");
 
     function start() {
