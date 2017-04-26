@@ -1,3 +1,5 @@
+var clearMap = function() {}
+var getPoints = function() {}
 $(document).ready(function() {
     point_rectangle = false;
     last_id = 0;
@@ -65,6 +67,7 @@ $(document).ready(function() {
         map.panTo(e.latlng);
     }
 
+
     /*<ul class="list-group">
   <li class="list-group-item list-group-item-success">First item</li>
   <li class="list-group-item list-group-item-info">Second item</li>
@@ -102,6 +105,23 @@ $(document).ready(function() {
             }
         })
         .addTo(map);
+    getPoints = function() {
+
+
+        count_of_points = 0;
+        $.get('/get/coords', function(data) {
+            addToMap(data)
+            addToPanelMap(data)
+            getBounds()
+
+
+
+            var local = localStorage.getItem("route");
+
+            $("#route_colapse" + local).click()
+
+        })
+    }
     init()
 
     function init() {
@@ -126,53 +146,10 @@ $(document).ready(function() {
                 })
 
             }, 2000)
-            $(".point").on('click', function(e) {
-                const lat = $(e.target).attr("lat")
-                const lng = $(e.target).attr("lng")
-                if (window.marker)
-                    window.marker.removeFrom(map)
-                window.marker = L.marker([lat, lng]).addTo(map)
-                positionTo(lat, lng)
-            })
-
-
-            $(".enable_button").on('click', function(e) {
-                const id = $(e.target).attr("point_id")
-                clearMap();
-
-                $.get('/enable/point/' + id, function(data) {
-                    getPoints()
-                })
-            })
-            $(".route_colapse").on('click', function(e) {
-                console.log($(e.target).attr("route"))
-                localStorage.setItem("route", $(e.target).attr("route"))
-            })
     }
 
-    function getPoints() {
-        $("#coords").html('')
-        $("#bounds_list1").html('')
 
 
-        count_of_points = 0;
-        $.get('/get/coords', function(data) {
-
-            getBounds()
-            addToMap(data)
-            addToPanelMap(data)
-
-
-            
-
-        }).done(function(){
-
-            $("#route_colapse" + local).click()
-        })
-    }
-
-            
-            var local = localStorage.getItem("route");
 
     function start() {
         console.log(localStorage.getItem("route"))
@@ -223,8 +200,8 @@ $(document).ready(function() {
                 $("#coords").append('<div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
-        <a data-toggle="collapse" data-parent="#coords" class="route_colapse" id="route_colapse' + count + '" route="' + count + '" href="#collapse' + count + '" >' +
-                    count + ' route <span id="route' + count + '"   class="route_colapse" id="route_colapse' + count + '" route="' + count + '" > </span> m </a>      </h4>    </div> <div id="collapse' + count + '"  class="panel-collapse collapse ">\
+        <a data-toggle="collapse" data-parent="#coords" onclick="route_colapse(' + count + ') " class="route_colapse" id="route_colapse' + count + '" route="' + count + '" href="#collapse' + count + '" >' +
+                    count + ' route <span id="route' + count + '"  onclick="route_colapse(' + count + ')  class="route_colapse" id="route_colapse' + count + '" route="' + count + '" > </span> m </a>      </h4>    </div> <div id="collapse' + count + '"  class="panel-collapse collapse ">\
       <div class="panel-body" style="padding: 0px;">  <ul class="list-group" id="route_list' + count + '">\
                   </ul>  </div>\
     </div>\
@@ -237,18 +214,18 @@ $(document).ready(function() {
                     e.address + ' <br>' + (e.dist ? e.dist : 'start') + '<div class="btn-group pull-right"> '
 
                     +
-                    (e.intersection ? (' <a class="btn btn-xs       btn-default point"  lat="' + e.lat_inter + '" lng="' + e.lng_inter + '">\
-                        <i class="fa fa-times point" lat="' +
-                        e.lat_inter + '" lng="' + e.lng_inter + '" aria-hidden="true"></i></a>') : ('')) +
+                    (e.intersection ? (' <a class="btn btn-xs       btn-default point"  onclick=" markerFunction(' + e.lat_inter + ',' + e.lng_inter + ') ">\
+                        <i class="fa fa-times point"  onclick=" markerFunction(' + e.lat_inter + ',' + e.lng_inter + ')" aria-hidden="true"></i></a>') : ('')) +
 
 
-                    ((e.enable) ? ' <a class="btn btn-xs    btn-default point"  lat="' + e.lat + '" lng="' + e.lng + '"><i class="fa fa-map-marker point" lat="' +
-                        e.lat + '" lng="' + e.lng + '" aria-hidden="true"></i></a>' : '')
+                    ((e.enable) ? ' <a class="btn btn-xs    btn-default point"   onclick=" markerFunction(' + e.lat + ',' + e.lng + ')" >\
+                        <i class="fa fa-map-marker point" onclick=" markerFunction(' + e.lat + ',' + e.lng + ')"  aria-hidden="true"></i></a>' : '')
 
                     +
 
 
-                    '<a class="btn btn-xs       btn-default enable_button" point_id="' + e.id + '"  ><i  point_id="' + e.id + '"  class=" enable_button fa ' + ((e.enable) ? 'fa-minus' : 'fa-plus') + '" aria-hidden="true"></i></a>' +
+                    '<a class="btn btn-xs       btn-default enable_button"  onclick="enable_button(' + e.id + ')" point_id="' + e.id + '"  >\
+                    <i  point_id="' + e.id + '"  class=" enable_button fa ' + ((e.enable) ? 'fa-minus' : 'fa-plus') + '" aria-hidden="true"></i></a>' +
                     '</div></li>')
             })
             dist = dist.toFixed(2)
@@ -258,7 +235,7 @@ $(document).ready(function() {
         routs_count = count
     }
 
-    function clearMap() {
+    clearMap = function() {
         for (i in map._layers) {
             if (map._layers[i]._path != undefined) {
                 try {
@@ -302,23 +279,31 @@ $(document).ready(function() {
         if (e.shape == "Poly")
 
             geom = (toPolyGeoJson(e.layer._latlngs))
+
+            clearMap()
+            
+
+            $("#coords").html('')
+            $("#bounds_list1").html('')
         $.post("/set/bounds", {
             "geojson": geom
-        }).done(function(){  getPoints()})
-       
+        }).done(function() {
+            getPoints()
+        })
+
     });
     map.pm.disableDraw('Circle');
 
     function getBounds() {
-       $("#bounds_list").html("")
+        $("#bounds_list1").html("")
         $.get("/get/bounds", function(data) {
             console.log(data[0])
             if (data[0])
-                if($("#bounds").html()==null)
-                $("#bounds_list1").append('<div class="panel panel-default">\
+                if ($("#bounds").html() == null)
+                    $("#bounds_list1").append('<div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
-        <a data-toggle="collapse" data-parent="#coords" class="route_colapse" id="route_colapse"  href="#bounds" >\
+        <a data-toggle="collapse" data-parent="#coords"  class="route_colapse" id="route_colapse"  href="#bounds" >\
          bounds </a>      </h4>    </div> \
                 <div id="bounds"  class="panel-collapse collapse ">\
       <div class="panel-body" style="padding: 0px;">  <ul class="list-group" id="bound_list">\
@@ -335,32 +320,23 @@ $(document).ready(function() {
                     +
 
 
-                    ' <a class="btn btn-xs    btn-default point"  lat="' + c.coordinates[1] + '" lng="' + c.coordinates[0] + '"><i class="fa fa-map-marker point" lat="' +
-                    c.coordinates[1] + '" lng="' + c.coordinates[0] + '" aria-hidden="true"></i></a>'
+                    ' <a class="btn btn-xs    btn-default point"  onclick=" markerFunction(' + c.coordinates[1] + ',' + c.coordinates[0] + ') "  \
+                     ><i class="fa fa-map-marker point" onclick=" markerFunction(' + c.coordinates[1] + ',' + c.coordinates[0] + ') "  aria-hidden="true"></i></a>'
 
                     +
 
 
-                    '<a class="btn btn-xs       btn-default erase_button"  bound_id="' + elem.id + '"  >\
+                    '<a class="btn btn-xs       btn-default erase_button" onclick = "erase_button(' + elem.id + ')" bound_id="' + elem.id + '"  >\
                     <i  bound_id="' + elem.id + '"   class=" erase_button fa fa-trash" aria-hidden="true"></i></a>' +
                     '</div></li>')
 
                 L.geoJSON(JSON.parse(elem.st_asgeojson)).addTo(map);
 
             })
-            
-            
+
+
         })
-        $(".erase_button").on('click', function(e) {
-                const bound_id = $(e.target).attr("bound_id")
-                console.log(bound_id)
-                $.get('/rem/bounds/' + bound_id, function(data) {
 
-                    clearMap();
-                    getPoints();
-
-                })
-            })
     }
 })
 
@@ -383,6 +359,18 @@ function toLineGeoJson(data) {
         "type": "LineString",
         "coordinates": temp_array
     }
+}
+erase_button = function(bound_id) {
+
+    clearMap();
+
+    $("#coords").html('')
+    $("#bounds_list1").html('')
+    $.get('/rem/bounds/' + bound_id, function(data) {
+
+        getPoints();
+
+    })
 }
 
 function toPolyGeoJson(data) {
@@ -407,6 +395,32 @@ function toPolyGeoJson(data) {
         "coordinates": temp_array
     }
 }
+
+function enable_button(point_id) {
+
+    const id = point_id
+    clearMap();
+
+    $("#coords").html('')
+    $("#bounds_list1").html('')
+
+    $.get('/enable/point/' + id, function(data) {
+        getPoints()
+    })
+}
+
+function route_colapse(route) {
+
+    localStorage.setItem("route", route)
+}
+
+function markerFunction(lat, lng) {
+    if (window.marker)
+        window.marker.removeFrom(map)
+    window.marker = L.marker([lat, lng]).addTo(map)
+    positionTo(lat, lng)
+}
+
 
 // var firstpolyline = new L.Polyline(pointList, {
 //     color: 'blue',

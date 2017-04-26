@@ -23,7 +23,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "preinstall": "npm install pm2 -g",
     "test": "server.js 3006",
     "start": "pm2 start --attach server.js"
   },

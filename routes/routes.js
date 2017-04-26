@@ -141,9 +141,10 @@ module.exports = function(app) {
             res.status(500).end("Unauthorised")
         var user = req.user.id
         var _q = `SELECT lat, lng, c.id, st_astext(last_geom),st_asgeojson(st_centroid(st_intersection(geom,last_geom))) 
-        	as intersection, c.session, speed, date, enable, address, 
+        	as intersection, c.session, speed, to_char( to_timestamp ( c.date),'DD.MM.YYYY HH24:MI:SS') as date, enable, address, 
        "time"
   FROM public.coords_view c left join bounds b on st_intersects(geom,last_geom) and c.session = b.session  where c.session=${user} order by c.date `
+
         //console.log(_q)
         app.dbQuery(req, res, _q, function(err, result) {
             if (err)
@@ -162,7 +163,7 @@ module.exports = function(app) {
             res.status(500).end("Unauthorised")
         var user = req.user.id
         var _q = `SELECT c.lat, c.lng, c.id, st_astext(last_geom),st_asgeojson(st_centroid(st_intersection(geom,last_geom))) 
-        	as intersection, c.session, c.speed ,c.date, c.enable, c.address, 
+        	as intersection, c.session, c.speed ,to_char( to_timestamp ( c.date),'DD.MM.YYYY HH24:MI:SS') as date, c.enable, c.address, 
        c."time",c2.lat as lastlat,c2.lng as lastlng
   FROM public.coords_view c left join bounds b on st_intersects(geom,last_geom) and c.session = b.session 
   left join coords c2  on  c2.id = ${req.params.last_id} and c2.session=${user} where c.session=${user} order by c.date  
@@ -196,7 +197,7 @@ module.exports = function(app) {
         //res.json(req.session)
 
         var _q = `SELECT lat, lng, c.id, st_astext(last_geom),st_asgeojson(st_centroid(st_intersection(geom,last_geom))) 
-        	as intersection, c.session, speed, date, enable, address, 
+        	as intersection, c.session, speed, to_char( to_timestamp ( c.date),'DD.MM.YYYY HH24:MI:SS') as date, enable, address, 
        		"time"
 		  FROM public.coords_view c left join bounds b on st_intersects(geom,last_geom) and 
 		  c.session = b.session  where c.session=(select id from sessions 
