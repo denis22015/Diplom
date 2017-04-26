@@ -64,7 +64,7 @@ module.exports = function(app) {
         if (req.user == undefined)
             res.status(500).end("Unauthorised")
         var user = req.user.id
-        const _q = (`select st_asgeojson (st_setsrid(geom,4326)), st_asgeojson (st_centroid(st_setsrid(geom,4326)))
+        const _q = (`select id, st_asgeojson (st_setsrid(geom,4326)), st_asgeojson (st_centroid(st_setsrid(geom,4326)))
 		 as centr from bounds where session=${user}`).replace(/\"/g, '"')
         //res.json(_q)
         app.dbQuery(req, res, _q, function(err, result) {
@@ -72,6 +72,20 @@ module.exports = function(app) {
                 res.end(err.toString())
             }
             res.json(result)
+        })
+    })
+
+	 app.get('/rem/bounds/:id', function(req, res) {
+        if (req.user == undefined)
+            res.status(500).end("Unauthorised")
+        var user = req.user.id
+        const _q = (`delete from bounds where id=${req.params.id} and session=${user}`).replace(/\"/g, '"')
+        //console.log(_q)
+        app.dbQuery(req, res, _q, function(err, result) {
+            if (err) {
+                res.end(err.toString())
+            }
+            res.end("1")
         })
     })
 

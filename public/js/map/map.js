@@ -262,6 +262,8 @@ $(document).ready(function() {
                 }
             }
         }
+        if (window.marker)
+            window.marker.removeFrom(map)
     }
     if (!map.restoreView()) {
         map.setView(lastPoint, 16);
@@ -319,7 +321,7 @@ $(document).ready(function() {
             data.forEach(function(elem) {
                 var e = JSON.parse(elem.st_asgeojson);
                 var c = JSON.parse(elem.centr);
-                console.log(c.coordinates[0])
+                console.log(e)
                 $("#bound_list").append(' <li class="list-group-item list-group-item-info' + ' " > ' + e.type +
                     '<div class="btn-group pull-right"> '
 
@@ -332,7 +334,8 @@ $(document).ready(function() {
                     +
 
 
-                    '<a class="btn btn-xs       btn-default erase_button"  bound_id="' + e.id + '"  ><i  bound_id="' + e.id + '"   class=" erase_button fa fa-trash" aria-hidden="true"></i></a>' +
+                    '<a class="btn btn-xs       btn-default erase_button"  bound_id="' + elem.id + '"  >\
+                    <i  bound_id="' + elem.id + '"   class=" erase_button fa fa-trash" aria-hidden="true"></i></a>' +
                     '</div></li>')
 
                 L.geoJSON(JSON.parse(elem.st_asgeojson)).addTo(map);
@@ -345,6 +348,16 @@ $(document).ready(function() {
                     window.marker.removeFrom(map)
                 window.marker = L.marker([lat, lng]).addTo(map)
                 positionTo(lat, lng)
+            })
+            $(".erase_button").on('click', function(e) {
+                const bound_id = $(e.target).attr("bound_id")
+                console.log(bound_id)
+                $.get('/rem/bounds/' + bound_id, function(data) {
+                    
+                clearMap();
+                    getPoints();
+
+                        })
             })
         })
     }
