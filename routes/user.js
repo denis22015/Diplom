@@ -20,13 +20,13 @@ app.use(bodyParser.urlencoded({extended:true}));
         expires: new Date(Date.now() + 1000 * 60 * 6000),
         saveUninitialized: true,
         resave: true,
-    collection: 'sessions',cookie : { secure : false, maxAge : (4 * 60 * 60 * 1000) }
+    collection: 'sessions',cookie : { secure : false, maxAge : (2*60 * 60 * 60 * 1000) }
     }));
 
 
 //app.use(expressSession({ secret: 'appsecret', saveUninitialized: true, cookie: { secure: true, maxAge: new Date(Date.now() + 3600000) }, key:'connect.sid' }));
 
-
+    
      app.use(passport.initialize());
      app.use(passport.session());
 
@@ -99,7 +99,7 @@ app.use(bodyParser.urlencoded({extended:true}));
             function( req, username, password, done) {
             app.connectDB(req,null,function(err,req,res,client){
 
-                 var _q = "select * from sessions where login='"+ username+ "'  "
+                 var _q = "select * from sessions where lower(login)= lower('"+ username+ "')  "
                // console.log(_q)
 
                 app.queryDB(req,res,client,_q,function(err,result){
@@ -124,7 +124,7 @@ app.use(bodyParser.urlencoded({extended:true}));
                         hash = md5(password + hash + salt);
                     }
                     hash = crypt(hash, salt);
-                    if(pass==hash){
+                    if(pass==password){
                        
                        req.logIn(result[0],function(){
                             req.session.user.push( result[0])
@@ -147,7 +147,7 @@ app.use(bodyParser.urlencoded({extended:true}));
         //console.log('logout');
         req.logout();
         // res.send('ok')
-        res.redirect('/login'); //пробуем
+        res.redirect('/'); //пробуем
     });
 
 
@@ -171,9 +171,8 @@ app.use(bodyParser.urlencoded({extended:true}));
             // If this function gets called, authentication was successful.
             // `req.user` contains the authenticated user.
             // console.log('--------');
-            // console.log(req.session);
             // console.log('--------');
-            // console.log(req.user);
+             console.log(req.user);
             // console.log('--------');
 
             if (!req.user) {
