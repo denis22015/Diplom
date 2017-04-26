@@ -71,7 +71,7 @@ $(document).ready(function() {
 </ul>*/
     L.control.custom({
             position: 'topright',
-            content: ' <div  style="   max-height: 500px;    overflow: auto;"  class="panel-body"  ><div id="bounds_list"></div><div id="coords"></div>',
+            content: ' <div  style="   max-height: 500px;    overflow: auto;"  class="panel-body"  ><div id="bounds_list1"></div><div id="coords"></div>',
             classes: 'panel panel-default',
             style: {
                 margin: '10px',
@@ -130,7 +130,7 @@ $(document).ready(function() {
 
     function getPoints() {
         $("#coords").html('')
-        $("#bounds_list").html('')
+        $("#bounds_list1").html('')
         getBounds()
 
 
@@ -309,8 +309,8 @@ $(document).ready(function() {
         $.get("/get/bounds", function(data) {
             console.log(data[0])
             if (data[0])
-                if($("#bounds").html(''))
-                $("#bounds_list").append('<div class="panel panel-default">\
+                if($("#bounds").html()==null)
+                $("#bounds_list1").append('<div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
         <a data-toggle="collapse" data-parent="#coords" class="route_colapse" id="route_colapse"  href="#bounds" >\
