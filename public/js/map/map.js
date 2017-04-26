@@ -143,7 +143,10 @@ $(document).ready(function() {
 
             
 
-        }).done(function(){
+        }).done(function(){}
+            )
+    }
+
             $(".point").on('click', function(e) {
                 const lat = $(e.target).attr("lat")
                 const lng = $(e.target).attr("lng")
@@ -168,10 +171,7 @@ $(document).ready(function() {
             })
             var local = localStorage.getItem("route");
 
-            $("#route_colapse" + local).click()}
-            )
-    }
-
+            $("#route_colapse" + local).click()
     function start() {
         console.log(localStorage.getItem("route"))
     }
