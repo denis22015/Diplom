@@ -49,8 +49,9 @@ module.exports = function(app) {
             res.status(500).end("Unauthorised")
         var user = req.user.id
         const geojson = JSON.stringify(req.body.geojson) || 0;
-        //res.json(geojson)
-        const _q = (`insert into bounds (geom,session) values  (ST_GeomFromGeoJSON('${geojson}',${user})) `).replace(/\"/g, '"')
+       // res.json(geojson)
+        const _q = (`insert into bounds (geom,session) values  (ST_GeomFromGeoJSON('${geojson}'),${user}) `).replace(/\"/g, '"')
+        console.log(_q)
         //res.json(_q)
         app.dbQuery(req, res, _q, function(err, result) {
             if (err) {

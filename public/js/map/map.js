@@ -71,7 +71,7 @@ $(document).ready(function() {
 </ul>*/
     L.control.custom({
             position: 'topright',
-            content: ' <div  style="   max-height: 500px;    overflow: auto;"  class="panel-body" id="coords" ></div>',
+            content: ' <div  style="   max-height: 500px;    overflow: auto;"  class="panel-body"  ><div id="bounds_list"></div><div id="coords"></div>',
             classes: 'panel panel-default',
             style: {
                 margin: '10px',
@@ -129,6 +129,7 @@ $(document).ready(function() {
     }
 
     function getPoints() {
+        $("#coords").html('')
         getBounds()
 
 
@@ -151,7 +152,6 @@ $(document).ready(function() {
             $(".enable_button").on('click', function(e) {
                 const id = $(e.target).attr("point_id")
                 clearMap();
-                $("#coords").html('')
 
                 $.get('/enable/point/' + id, function(data) {
                     getPoints()
@@ -292,20 +292,21 @@ $(document).ready(function() {
         if (e.shape == "Line")
             geom = (toLineGeoJson(e.layer._latlngs))
         if (e.shape == "Poly")
+
             geom = (toPolyGeoJson(e.layer._latlngs))
         $.post("/set/bounds", {
             "geojson": geom
-        },function(){
-            getPoints()
-        })
+        }).done(function(){  getPoints()})
+       
     });
     map.pm.disableDraw('Circle');
 
     function getBounds() {
+       $("#bounds_list").html("")
         $.get("/get/bounds", function(data) {
             console.log(data[0])
             if (data[0])
-                $("#coords").append('<div class="panel panel-default">\
+                $("#bounds_list").append('<div class="panel panel-default">\
     <div class="panel-heading">\
       <h4 class="panel-title">\
         <a data-toggle="collapse" data-parent="#coords" class="route_colapse" id="route_colapse"  href="#bounds" >\
@@ -337,14 +338,14 @@ $(document).ready(function() {
                 L.geoJSON(JSON.parse(elem.st_asgeojson)).addTo(map);
 
             })
-        })
-        $(".point").on('click', function(e) {
-            const lat = $(e.target).attr("lat")
-            const lng = $(e.target).attr("lng")
-            if (window.marker)
-                window.marker.removeFrom(map)
-            window.marker = L.marker([lat, lng]).addTo(map)
-            positionTo(lat, lng)
+            $(".point").on('click', function(e) {
+                const lat = $(e.target).attr("lat")
+                const lng = $(e.target).attr("lng")
+                if (window.marker)
+                    window.marker.removeFrom(map)
+                window.marker = L.marker([lat, lng]).addTo(map)
+                positionTo(lat, lng)
+            })
         })
     }
 })
