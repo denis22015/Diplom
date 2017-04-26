@@ -131,15 +131,19 @@ $(document).ready(function() {
     function getPoints() {
         $("#coords").html('')
         $("#bounds_list1").html('')
-        getBounds()
 
 
         count_of_points = 0;
         $.get('/get/coords', function(data) {
+
+            getBounds()
             addToMap(data)
             addToPanelMap(data)
 
 
+            
+
+        }).done(function(){
             $(".point").on('click', function(e) {
                 const lat = $(e.target).attr("lat")
                 const lng = $(e.target).attr("lng")
@@ -164,9 +168,8 @@ $(document).ready(function() {
             })
             var local = localStorage.getItem("route");
 
-            $("#route_colapse" + local).click()
-
-        })
+            $("#route_colapse" + local).click()}
+            )
     }
 
     function start() {
@@ -343,15 +346,10 @@ $(document).ready(function() {
                 L.geoJSON(JSON.parse(elem.st_asgeojson)).addTo(map);
 
             })
-            $(".point").on('click', function(e) {
-                const lat = $(e.target).attr("lat")
-                const lng = $(e.target).attr("lng")
-                if (window.marker)
-                    window.marker.removeFrom(map)
-                window.marker = L.marker([lat, lng]).addTo(map)
-                positionTo(lat, lng)
-            })
-            $(".erase_button").on('click', function(e) {
+            
+            
+        })
+        $(".erase_button").on('click', function(e) {
                 const bound_id = $(e.target).attr("bound_id")
                 console.log(bound_id)
                 $.get('/rem/bounds/' + bound_id, function(data) {
@@ -361,7 +359,6 @@ $(document).ready(function() {
 
                 })
             })
-        })
     }
 })
 
