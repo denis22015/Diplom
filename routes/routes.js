@@ -343,7 +343,7 @@ module.exports = function(app) {
                     elem.radius = 1.5
                     elem.speed = (dist / (+elem.time)).toFixed(2);
                     elem.acc = ((elem.speed - last_speed) / +elem.time).toFixed(2);
-                    elem.name = "<br> Speed :" + elem.speed + "<br> Time :" + elem.time + "<br> Distance :" + elem.dist + "<br> Acceleration :" + elem.acc
+                    elem.name = "<br> Speed :" + elem.speed + "<br> Time :" + elem.time + "sec <br> Distance :" + elem.dist + "m <br> Acceleration :" + elem.acc
                     pointList.push(elem);
                     if (elem.enable) {
                         lastlan = elem.lat
