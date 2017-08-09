@@ -1,10 +1,7 @@
 
 module.exports = function(app){
     var passport       = require('passport');
-    //var LocalStrategy  = require('passport-local').Strategy;
-
 var passportLocal = require('passport-local').Strategy;
-//app.use(cookieParser('SECRET' ))
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressSession = require('express-session');
@@ -22,75 +19,21 @@ app.use(bodyParser.urlencoded({extended:true}));
         resave: true,
     collection: 'sessions',cookie : { secure : false, maxAge : (2*60 * 60 * 60 * 1000) }
     }));
-
-
-//app.use(expressSession({ secret: 'appsecret', saveUninitialized: true, cookie: { secure: true, maxAge: new Date(Date.now() + 3600000) }, key:'connect.sid' }));
-
     
      app.use(passport.initialize());
      app.use(passport.session());
 
-
-
-// app.configure(function() {
-//   app.use(express.static('public'));
-//   app.use(express.cookieParser());
-//   app.use(express.bodyParser());
-//   app.use(express.session({ secret: 'keyboard cat' }));
-//   app.use(passport.initialize());
-//   app.use(passport.session());
-//   app.use(app.router);
-// });
-
-
-
-
-     /*  app.use(cookieParser());
-  app.use(bodyParser());
-  app.use(expressSession({ secret: 'keyboard cat' }));
-  app.use(passport.initialize());
-  
-  app.use(passport.session());
-  app.use(app.router);*/
+    
+    
     passport.serializeUser(function(user, done) {
-     //  console.log('+++++++++++++++++++++')
-      //  console.log(user)
-    //    console.log('+++++++++++++++++++++')
         done(null, user);
     });
-    // passport.deserializeUser(function(user, done) {
-    //        User.findById(user, function (err, user) {
-    //          done(done, user);
-    //         });
-    // });
+    
+    
     passport.deserializeUser(function(obj, done) {
-
-       // console.log('-----------------')
-     //   console.log(obj)
-      //  console.log('-----------------')
         done(null, obj);
     });
 
-/*
-     var middleware = passport.authenticate('local-signin', { session: true}, function(err, user, info){
-      console.log("Test:"+user);
-      if(err) {
-        console.log("Error1");
-        return next(err)}
-      if(!user){
-        console.log("Error2");
-        return res.json(401, {error: 'Auth Error!'});
-      }
-      console.log("Error3");
-      var token = jwt.encode({ username: user.email }, "hanswurst");
-      res.json({token: token});
-    })
-
-     /*
-
-    app.post('/auth', middleware);
-
-*/
     passport.use(  new passportLocal({
                 passReqToCallback: true,
                 usernameField: 'username',
@@ -110,7 +53,6 @@ app.use(bodyParser.urlencoded({extended:true}));
                     req.session=req.session||{}
 
                     req.session.user=req.session.user||[];
-                    //console.log(result)
                     if (!result[0]) {
                             console.log('wrong login and pass');
                             return done(null, null);
@@ -142,20 +84,10 @@ app.use(bodyParser.urlencoded({extended:true}));
         }));
 
     app.get('/logout', function(req, res) {
-        //console.log('logout');
-       // res.cacheControl({ 'no-cache': true });
-        //console.log('logout');
         req.logout();
-        // res.send('ok')
         res.redirect('/'); //пробуем
     });
 
-
-    // passport.authenticate('local', function (err, user) {
-    //     req.logIn(user, function (err) { // <-- Log user in
-    //        return res.redirect('/'); 
-    //     });
-    // })(req, res);
 
 
 
@@ -163,17 +95,9 @@ app.use(bodyParser.urlencoded({extended:true}));
 
     app.post('/login',      passport.authenticate('local', {  failureRedirect: '/fail' }),//)
 
-    //    '/login',
-    //     passport.authenticate('local', { successRedirect: '/',  failureRedirect: '/map' }),
         function(req, res) {
            
-            //res.cacheControl({ 'no-cache': true });
-            // If this function gets called, authentication was successful.
-            // `req.user` contains the authenticated user.
-            // console.log('--------');
-            // console.log('--------');
              console.log(req.user);
-            // console.log('--------');
 
             if (!req.user) {
                 console.log('failed redirect');
@@ -195,13 +119,4 @@ app.use(bodyParser.urlencoded({extended:true}));
             }
         }
     );
-
-    /*
-    app.route('/login').post( 
-      passport.authenticate('local-signin'),
-      function(req, res) {
-        // This will only get called when authentication succeeded.
-        res.json({ "user" : req.user });
-      }
-    );*/
 }
