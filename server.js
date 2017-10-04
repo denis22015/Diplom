@@ -30,28 +30,6 @@ process.on('UncaughtException', function(e){
 	console.error(e);
 })
 
-app.connectDB = function (req,res,callback){		
-	var pool = new pg.Pool(config);
-	pool.connect(function(err, client, done) {
-	  if(err) {
-		return console.error('error fetching client from pool', err);
-	  }
-	   
-	   pool.end(function (err) {
-	      if (err) throw err;
-	  });
-	  
-	  callback (err,req,res,client) 	
-		
-  });
-
-
-
-	pool.on('error', function (err, client) {
-	  console.error('idle client error', err.message, err.stack)
-	})
-};
-
 
 
 app.queryDB = function(req,res,client,query,callback){
