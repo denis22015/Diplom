@@ -55,14 +55,14 @@ module.exports = function(app){
                         return done(null, null);
                     }
 
-                    const salt = result[0].salt;
+                    //const salt = result[0].salt;
                     const pass = result[0].password;
-                    const login = result[0].login;
-                    let hash = '';
-                    for (var i = 0; i < 10; i++) {
-                        hash = md5(password + hash + salt);
-                    }
-                    hash = crypt(hash, salt);
+                    //const login = result[0].login;
+                    // let hash = '';
+                    // for (var i = 0; i < 10; i++) {
+                    //     hash = md5(password + hash + salt);
+                    // }
+                    // hash = crypt(hash, salt);
                     if(pass==password){                       
                        req.logIn(result[0],function(){
                             req.session.user.push( result[0])
