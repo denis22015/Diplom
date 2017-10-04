@@ -1,0 +1,68 @@
+<html class="gt-ie8" xmlns="https://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>Map</title>
+		<link rel="stylesheet" href="js/leaflet/leaflet.css">
+		<link rel="stylesheet" href="/css/map.css">
+		<link rel="stylesheet" href="/css/styles.css">
+		<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/leafletPM/leaflet.pm.css">
+		<script src="js/jquery-3.1.1.min.js"></script>		
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/leaflet/leaflet.js"></script>
+		<script src="leafletPM/leaflet.pm.min.js"></script>
+		
+		
+
+  		<script type='text/javascript' src="js/leaflet.restoreview.js"></script>
+		<script src="js/map/leaflet.Custom.js"></script>
+		<script src="js/map/mapContextMenu.js"></script>
+		
+		
+		<script src="js/map/map.js"></script>
+		<link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+		
+	</head>
+	<body >
+		<div id="myModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog modal-sm">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Authorization</h4>
+			  </div>
+			  <div class="modal-body">
+			  <form method="post" action="/user/login">
+			  <div class="form-group">
+				<label for="username">Code:</label>
+				<input type="username" name="username" class="form-control" id="username">
+			  </div>
+			  <div class="form-group">
+				<label for="pwd">Password:</label>
+				<input type="password" name="password"  class="form-control" id="pwd">
+			  </div>
+			  <button type="submit" class="btn btn-primary pull-right">Submit</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</form>
+			  </div>
+			</div>
+
+		  </div>
+		</div>
+		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		  <div class="container">
+			
+			<div class="collapse navbar-collapse pull-right">
+			  <ul class="nav navbar-nav">
+				<%- contents%> 
+			  </ul>
+			</div>
+
+		  </div>
+		</div> 
+		<div id="mapid"></div>
+	</body>
+	
+</html>

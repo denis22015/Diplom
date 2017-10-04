@@ -109,7 +109,8 @@ $(document).ready(function() {
 
 
         count_of_points = 0;
-        $.get('/get/coords', function(data) {
+        $.get('points/get/', function(data) {
+            console.log(data)
             addToMap(data)
             addToPanelMap(data)
             getBounds()
@@ -126,26 +127,7 @@ $(document).ready(function() {
 
     function init() {
         getPoints()
-        interval =
-
-            setInterval(function() {
-
-                $.get('/test/' + count_of_points, function(data) {
-
-
-                    if (!data) {
-                        //pointList.push(lastPoint)
-                        var pointList;
-                        pointList.push(lastPoint)
-                        $.get('get/coords/' + count_of_points, function(data) {
-                            addToMap(data)
-                            addToPanelMap(data)
-
-                        })
-                    }
-                })
-
-            }, 2000)
+        
     }
 
 
@@ -157,7 +139,7 @@ $(document).ready(function() {
     var lastPoint = [50.40851753069729, 30.569458007812504]
 
     function addToMap(data) {
-        var pointList;
+        //var pointList;
         data.forEach(function(elem) {
             pointList = [];
             elem.forEach(function(e) {
@@ -285,7 +267,7 @@ $(document).ready(function() {
 
             $("#coords").html('')
             $("#bounds_list1").html('')
-        $.post("/set/bounds", {
+        $.post("/bounds/set", {
             "geojson": geom
         }).done(function() {
             getPoints()
@@ -296,8 +278,7 @@ $(document).ready(function() {
 
     function getBounds() {
         $("#bounds_list1").html("")
-        $.get("/get/bounds", function(data) {
-            console.log(data[0])
+        $.get("/bounds/get", function(data) {
             if (data[0])
                 if ($("#bounds").html() == null)
                     $("#bounds_list1").append('<div class="panel panel-default">\
@@ -366,7 +347,7 @@ erase_button = function(bound_id) {
 
     $("#coords").html('')
     $("#bounds_list1").html('')
-    $.get('/rem/bounds/' + bound_id, function(data) {
+    $.get('/bounds/rem/' + bound_id, function(data) {
 
         getPoints();
 
@@ -404,7 +385,7 @@ function enable_button(point_id) {
     $("#coords").html('')
     $("#bounds_list1").html('')
 
-    $.get('/enable/point/' + id, function(data) {
+    $.get('/points/enable/' + id, function(data) {
         getPoints()
     })
 }
