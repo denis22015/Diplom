@@ -1,0 +1,10 @@
+{
+	"user": "uqlyikmvgiyznd", 
+	"database": "d3n948ttnop2ub", 
+	"host": "ec2-54-247-99-159.eu-west-1.compute.amazonaws.com", 
+	"port": 5432, 
+	"max": 2,
+	"ssl": true,
+	"password":"a1119617d3dc99ae7153fe49c08c8fae7a24d7f1d52eefbec0ab86328a544693", 
+	"idleTimeoutMillis": 1000
+}
