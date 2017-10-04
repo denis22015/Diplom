@@ -12,30 +12,7 @@ app.set('port', process.env.PORT||process.argv[2] || 3002);
 var pg = require('pg');
 app.jquery = require('jquery');
 
-// create a config to configure both pooling behavior
-// and client options
-// note: all config is optional and the environment variables
-// will be read if the config is not present
 
-
-// var config = {
-//   user: 'postgres', //env var: PGUSER
-//   database: 'postgres', //env var: PGDATABASE
-//   host: 'localhost', // Server hosting the postgres database
-//   port: 5432, //env var: PGPORT
-//   max: 2,
-//   password:"1111", // max number of clients in the pool
-//   idleTimeoutMillis: 15000, // how long a client is allowed to remain idle before being closed
-// };
-//  var config = {
-//   user: 'uqlyikmvgiyznd', //env var: PGUSER
-//   database: 'd3n948ttnop2ub', //env var: PGDATABASE
-//   host: 'ec2-54-247-99-159.eu-west-1.compute.amazonaws.com', // Server hosting the postgres database
-//   port: 5432, //env var: PGPORT
-//   max: 10,ssl: true,
-//   password:"a1119617d3dc99ae7153fe49c08c8fae7a24d7f1d52eefbec0ab86328a544693", // max number of clients in the pool
-//   idleTimeoutMillis: 300000, // how long a client is allowed to remain idle before being closed
-// };
  var config = {
   user: 'uqlyikmvgiyznd', //env var: PGUSER
   database: 'd3n948ttnop2ub', //env var: PGDATABASE
@@ -47,19 +24,13 @@ app.jquery = require('jquery');
   idleTimeoutMillis: 1000, // how long a client is allowed to remain idle before being closed
 };
 
-//this initializes a connection pool
-//it will keep idle connections open for a 30 seconds
-//and set a limit of maximum 10 idle clients
 
-// to run a query we can acquire a client from the pool,
-// run a query on the client, and then return the client to the pool
 
 process.on('UncaughtException', function(e){
-	   console.error(e);
-	   })
+	console.error(e);
+})
 
-app.connectDB = function (req,res,callback){	
-	
+app.connectDB = function (req,res,callback){		
 	var pool = new pg.Pool(config);
 	pool.connect(function(err, client, done) {
 	  if(err) {
@@ -69,9 +40,8 @@ app.connectDB = function (req,res,callback){
 	   pool.end(function (err) {
 	      if (err) throw err;
 	  });
-	   callback (err,req,res,client)
-
-	  	
+	  
+	  callback (err,req,res,client) 	
 		
   });
 

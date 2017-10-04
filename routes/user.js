@@ -40,12 +40,10 @@ app.use(bodyParser.urlencoded({extended:true}));
                 passwordField: 'password'
             },
             function( req, username, password, done) {
-            app.connectDB(req,null,function(err,req,res,client){
-
-                 var _q = "select * from sessions where lower(login)= lower('"+ username+ "')  "
+                 const _q = `select * from sessions where lower(login)= lower(${username})  `
                // console.log(_q)
 
-                app.queryDB(req,res,client,_q,function(err,result){
+        app.dbQuery(req, res, _q, function(err, result) {
                     if(err){
 
                         console.log(err.toString())
@@ -78,8 +76,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 
             })
-        })
-
  
         }));
 

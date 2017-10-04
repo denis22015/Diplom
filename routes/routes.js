@@ -209,20 +209,8 @@ module.exports = function(app) {
             res.send(dividePoints(result))
         })
     })
-    // app.get('/get/coords/',function(req,res){
-    // 	//res.json(req.session)
-    // 	app.connectDB(req,res,function(err,req,res,client){
-    // 		console.log("HERE")
-    //        	var _q = `select  id ,to_char( to_timestamp ( date),'DD.MM.YYYY HH24:MI:SS') as date, \
-    //        	lat, lng, session, round(speed::numeric,3) as speed  from coords order by date `
-    // 		console.log(_q)
-    // 		app.queryDB(req,res,client,_q,function(err,result){
-    // 			if(err)
-    // 				res.status(500).send(err)
-    // 			res.send("ok")
-    // 		})
-    // 	})
-    // })
+
+    
     app.get('/set/trash/*', function(req, res) {
         //res.json(req.session)
         //console.log("HERE")
