@@ -6,7 +6,7 @@ function radians(degrees) {
 
 function distance(lat1, lon1, lat2, lon2) {
 
-    var φ1 = radians(lat1),
+    const φ1 = radians(lat1),
         φ2 = radians(lat2),
         Δλ = radians(lon2 - lon1),
         R = 6371e3; // gives d in metres
@@ -14,14 +14,15 @@ function distance(lat1, lon1, lat2, lon2) {
 }
 
 
-
+//need to refactor
 module.exports = (data)=> {
-    var allPoints = []
+    let allPoints = []
+    let pointList = []
     if (data && data[0]) {
-        var pointList = []
-        var lastlan = 0,
+        
+        let lastlan = 0,
             lastlon = 0;
-        var last_speed = 0;
+        let last_speed = 0;
         data.forEach(function(elem) {
             if (elem.time > 1000000)
                 elem.time = 0
@@ -43,8 +44,7 @@ module.exports = (data)=> {
                 }
 
 
-            } else
-            if (elem.time > null) {
+            } else if (elem.time > null) {
                 if (lastlan == 0)
                     lastlan = elem.lastlat
                 if (lastlon == 0)
