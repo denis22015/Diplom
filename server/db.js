@@ -9,25 +9,24 @@ const pg = require('pg');
 const config = require('./config/dbConf.json');
 
 
-const dbQuery =  (req,res,_query,callback)=>{
-	const pool = new pg.Pool(config);
+const dbQuery = query =>
+	new Promise((res, rej) => {
 
-	pool.connect((err, client, done) =>{
-		if(err)
-		{
-			console.log(err);
-			return callback(err.toString(),null);
-		}
-	    client.query(_query,  (err, result)=>{
-			
-			done(err);
-			if(result){
-				return callback(err,result.rows);				
-			} else {
-				return callback(err,"error");
-			}
-		})
-	});
-}
+    const pool = new pg.Pool(config);
+    pool.connect((err, client, done) => {
+      if (err) {
+        console.log(err);
+        return rej(err.toString());
+      }
+      client.query(query, (err, result) => {
+        done(err);
+        if (result) {
+          return res(result.rows);
+        } else {
+          return rej(err);
+        }
+      })
+    });
+  });;
 
 module.exports = dbQuery;

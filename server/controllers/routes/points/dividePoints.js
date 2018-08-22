@@ -25,7 +25,9 @@ module.exports = (data)=> {
         let last_speed = 0;
         data.forEach(function(elem) {
             if (elem.time > 1000000)
-                elem.time = 0
+                elem.time = 0;
+
+          console.log(elem.time);
             if (elem.time < 0.01) {
                 elem.color = "#green"
                 elem.fill = "#00FF1E"
@@ -54,7 +56,7 @@ module.exports = (data)=> {
                     elem.lat_inter = inter[1]
                     elem.lng_inter = inter[0]
                 }
-                var dist = distance(lastlan, lastlon, elem.lat, elem.lng)
+              const dist = distance(lastlan, lastlon, elem.lat, elem.lng)
                 elem.color = "red"
                 elem.dist = dist.toFixed(2)
                 elem.fill = "#f03"

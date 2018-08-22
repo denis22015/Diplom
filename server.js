@@ -1,5 +1,4 @@
 const express = require('express');
-const http = require('http');
 const path = require('path');
 const app = new  (express)();
 const fs = require('fs');
@@ -9,16 +8,13 @@ const fs = require('fs');
 
 const user  = require('./server/routes/user/user.js');
 const routes  = require('./server/routes/routes.js');
-const indexFile = 'map.ejs'
+const indexFile = 'map.ejs';
 
 //init Sessions
 require('./server/initSessions.js')(app);
 
 
 app.set('port', process.env.PORT||process.argv[2] || 3000);
-
-// app.engine('.html', require('ejs').__express);
-// app.set('view engine', 'html');
 
 app.set('view engine', 'ejs');
 app.use('/user/',user);
@@ -45,9 +41,10 @@ fs.readdir('server/routes/api/', (err, files) => {
 
 	files.forEach(fileName => {
 		fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-		let file  = require(`./server/routes/api/${fileName}.js`); 
-		//console.log(file)
-		app.use(`/${fileName}/`,file);
+console.log(fileName)
+		let file  = require(`./server/routes/api/${fileName}.js`);
+		//console.log(file)npm
+		app.use(`/api/${fileName}/`,file);
 	});
 })
 

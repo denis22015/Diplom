@@ -14,13 +14,13 @@ module.exports =  (req, res) => {
                 function(err, data, body) {
                     if (err)
                         res.status(500).end(err)
-                    var result = (JSON.parse(body)).results[0].formatted_address
+                  const result = (JSON.parse(body)).results[0].formatted_address
 
-                    const _q = `update   coords set address='${result}' where id = ${id}`
+                    const query = `update   coords set address='${result}' where id = ${id}`
                     //console.log(_q)
-                    dbQuery(req, res, _q, function(err, result) {
-                        res.end("OK")
-                    })
+                  dbQuery(query)
+                    .then(() => res.end("Success"))
+                    .catch(err =>res.status(500).end(err.toString()));
                 })
         })
 
